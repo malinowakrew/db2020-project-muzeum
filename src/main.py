@@ -1,6 +1,3 @@
-import pymysql
+import sql.test as api
 
-connection= pymysql.Connect(
-    host='localhost',
-    
-)
+api.execute()
