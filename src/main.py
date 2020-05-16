@@ -1,3 +1,9 @@
-import sql.test as api
+import sql.eksponaty as api
 
-api.execute()
+print("Witamy w naszym muzeum")
+print("Wyszukaj kolumny - tymczasowe")
+co = input("kim jesteś?")
+if(co == "kierownik"):
+    api.kolumny()
+else:
+    api.wyszukiwarka()
