@@ -1,8 +1,8 @@
 import sql.eksponaty as api
 import os
 import sql.wystawy as wystawy
+import app.wystawy as wystawy_app
 import datetime
-
 
 print("Witamy w naszym muzeum")
 print("Zaloguj się na swoje konto aby mieć dostęp do większej ilości funkcjonalności")
@@ -28,7 +28,7 @@ while(zmienna):
               "1. Sprawdź aktualne wystawy \n"
               "2. Sprawdź popularne wystawy \n")
         funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
-        niezalogowany = wystawy.niezalogowany()
+        niezalogowany = wystawy_app.niezalogowany()
 
         if (funkcjonalnosc == "1"):
             dzis = datetime.datetime.now()
