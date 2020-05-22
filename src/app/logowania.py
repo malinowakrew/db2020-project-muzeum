@@ -20,8 +20,8 @@ class uzytkownik(wystawy.niezalogowany):
                 log = 0
                 return dane[0]
             except Exception as wiadomosc:
-                print(wiadomosc)
-                print("Niepoprawne hasło")
+                raise Exception(wiadomosc)
+
                 if (log < 4):
                     ponownie = (input("Czy chcesz spróbować ponownie? Napisz 'tak' jeśli chcesz.")).lower()
 
