@@ -2,6 +2,7 @@ import sql.eksponaty as api
 import os
 import sql.wystawy as wystawy
 import app.wystawy as wystawy_app
+import app.eksponaty as eksponaty_app
 import datetime
 
 print("Witamy w naszym muzeum")
@@ -13,7 +14,9 @@ while(zmienna):
     print("Wybierz co chcesz zrobić z naszego menu: \n"
           "1. Zaloguj się \n"
           "2. Załóż konto \n"
-          "3. Przeglądaj zbiory bez konta \n")
+          "3. Przeglądaj zbiory bez konta \n"
+          "4. Dodaj wystawe \n"
+          "5. Dodaj eksponat \n")
     funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
 
     if (funkcjonalnosc == "1"):
@@ -37,6 +40,16 @@ while(zmienna):
         elif (funkcjonalnosc == "2"):
             niezalogowany.najczesciej_odwiedzane_wystawy()
         print("\n \t ################### \n")
+
+    elif (funkcjonalnosc == "4"):
+        print("\n \t ################### \n")
+        niezalogowany = wystawy_app.niezalogowany()
+        niezalogowany.dodaj_wystawe()
+    elif (funkcjonalnosc == "5"):
+        print("\n \t ################### \n")
+        niezalogowany = eksponaty_app.niezalogowany()
+        niezalogowany.dodaj_eksponat()
+
 
     else:
         print("Mamy błąd - źle wybrałeś spróbuj ponownie.")

@@ -62,5 +62,36 @@ class niezalogowany():
         finally:
             return 1
 
+    def dodaj_wystawe(self):
+        try:
+                nazwa = input("Podaj nazwę wystawy: ")
+
+                startR = input("Będzie trwać od: \nRok:")
+                startM = input("Miesiąc:")
+                startD = input("Dzień:")
+                start = datetime.datetime(int(startR), int(startM), int(startD))
+                koniecR = input("Kończy się: \nRok:")
+                koniecM = input("Miesiąc:")
+                koniecD = input("Dzień:")
+                koniec = datetime.datetime(int(koniecR), int(koniecM), int(koniecD))
+                poczatek = start.strftime('%Y-%m-%d')
+                zakonczenie = koniec.strftime('%Y-%m-%d')
+
+                wybor = input(f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek} do {zakonczenie}\n")
+                wybor = wybor.lower()
+
+                if (wybor == "tak"):
+                    result = zapytania_wystawy.dodaj_wystawe(nazwa, poczatek, zakonczenie)
+
+        except Exception as wiadomosc:
+            if wiadomosc == "Błąd bazy":
+                print("Niestety baza nie może Cię obsłużyć. To jej wina")
+            else:
+                print(wiadomosc)
+            return 0
+        finally:
+            return 1
+
+
 
 
