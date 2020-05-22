@@ -77,3 +77,20 @@ def dodaj_wystawe(nazwa, poczatek, zakonczenie):
     finally:
         return 1
         connection.close()
+
+def zaloguj(login, haslo):
+    try:
+        connection = polaczenie()
+        with connection.cursor() as cursor:
+            sql3 = (
+                f"SELECT uzytkownik.nazwa, uzytkownik.email "
+                f"FROM uzytkownik "
+                f"WHERE uzytkownik.nazwa = '{login}' AND uzytkownik.haslo = '{haslo}';"
+            )
+            cursor.execute(sql3)
+            result = cursor.fetchall()
+            return result
+    except:
+        raise Exception("Błąd bazy")
+    finally:
+        connection.close()

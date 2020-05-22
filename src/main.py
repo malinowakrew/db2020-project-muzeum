@@ -3,6 +3,7 @@ import os
 import sql.wystawy as wystawy
 import app.wystawy as wystawy_app
 import app.eksponaty as eksponaty_app
+import app.logowania as logowania
 import datetime
 
 print("Witamy w naszym muzeum")
@@ -18,9 +19,29 @@ while(zmienna):
     funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
 
     if (funkcjonalnosc == "1"):
-        # clear = lambda: os.system('cls')
-        # clear()
-        print("Witamy u nas")
+        try:
+            on = logowania.uzytkownik()
+
+            print("1. Dodaj wystawę\n"
+                  "2. Dodaj eksponat")
+
+            funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
+
+            if (funkcjonalnosc == "1"):
+                print("\n \t ################### \n")
+                niezalogowany = wystawy_app.niezalogowany()
+                niezalogowany.dodaj_wystawe()
+
+            elif (funkcjonalnosc == "2"):
+                print("\n \t ################### \n")
+                niezalogowany = eksponaty_app.niezalogowany()
+                niezalogowany.dodaj_eksponat()
+            else:
+                print("Błąd wpisu")
+
+        except Exception as wiadomosc:
+            print(wiadomosc)
+
     elif (funkcjonalnosc == "2"):
         pass
     elif (funkcjonalnosc == "3"):
@@ -38,16 +59,6 @@ while(zmienna):
         elif (funkcjonalnosc == "2"):
             niezalogowany.najczesciej_odwiedzane_wystawy()
         print("\n \t ################### \n")
-
-    elif (funkcjonalnosc == "4"):
-        print("\n \t ################### \n")
-        niezalogowany = wystawy_app.niezalogowany()
-        niezalogowany.dodaj_wystawe()
-    elif (funkcjonalnosc == "5"):
-        print("\n \t ################### \n")
-        niezalogowany = eksponaty_app.niezalogowany()
-        niezalogowany.dodaj_eksponat()
-
 
     else:
         print("Mamy błąd - źle wybrałeś spróbuj ponownie.")

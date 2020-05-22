@@ -4,8 +4,9 @@ import sql.wystawy as zapytania_wystawy
 class uzytkownik(wystawy.niezalogowany):
     def __init__(self):
         super().__init__()
-        self.nazwa = (self.logowanie())['nazwa']
-        self.email = (self.logowanie())['email']
+        bufor = self.logowanie()
+        self.nazwa = bufor['nazwa']
+        self.email = bufor['email']
 
     def logowanie(self):
         print("Oto nasz panel logowania")
