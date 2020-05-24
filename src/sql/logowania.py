@@ -24,7 +24,7 @@ def dane_pracownika(login):
         connection = polaczenie()
         with connection.cursor() as cursor:
             sql3 = (
-                f"SELECT pracownik.imie, pracownik.nazwisko, pracownik.pracownikID "
+                f"SELECT pracownik.imie, pracownik.nazwisko, pracownik.pracownikID, pracownik.budynekID "
                 f"FROM pracownik "
                 f"JOIN uzytkownik ON pracownik.nazwa = uzytkownik.nazwa "
                 f"WHERE uzytkownik.nazwa = '{login}';"

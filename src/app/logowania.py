@@ -1,6 +1,7 @@
 # do bazy
 import sql.wystawy as zapytania_wystawy
 import sql.logowania as zapytania_logowania
+import sql.sale as zapytania_sale
 
 ## do innych app
 import app.wystawy as wystawy_app
@@ -49,6 +50,7 @@ class Pracownik(Uzytkownik):
         self.imie = bufor['imie']
         self.nazwisko = bufor['nazwisko']
         self.pracownikID = int(bufor['pracownikID'])
+        self.budynekID = int(bufor['budynekID'])
 
     def dane(self):
         return zapytania_logowania.dane_pracownika(self.nazwa)[0]
@@ -70,6 +72,9 @@ class Pracownik(Uzytkownik):
 
                 wybor = input(f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek} do {zakonczenie}\n")
                 wybor = wybor.lower()
+
+                ## sprawdzamy wolne sale - trzeba tu pokombinować
+                sale = zapytania_sale.pokaz_sale(self.budynekID)
 
                 if (wybor == "tak"):
                     result = zapytania_wystawy.dodaj_wystawe(nazwa, poczatek, zakonczenie, self.pracownikID)
