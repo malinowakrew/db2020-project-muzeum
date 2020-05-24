@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 17 Maj 2020, 17:24
+-- Czas generowania: 24 Maj 2020, 21:05
 -- Wersja serwera: 10.4.11-MariaDB
 -- Wersja PHP: 7.4.3
 
@@ -50,6 +50,17 @@ CREATE TABLE `bilet` (
   `nazwa_uzytkownika` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Zrzut danych tabeli `bilet`
+--
+
+INSERT INTO `bilet` (`biletID`, `cena`, `data_zakupu`, `zakupiony`, `wystawaID`, `nazwa_uzytkownika`) VALUES
+(1, 12, '2020-05-14', b'1', 3, 'przyklad'),
+(2, 12, '2020-05-13', b'1', 4, 'agatka23'),
+(3, 12, '2020-05-04', b'1', 4, 'przyklad'),
+(4, 40, '2019-03-05', b'1', 2, 'agatka23'),
+(5, 40, '2019-03-05', b'1', 2, 'agatka23');
+
 -- --------------------------------------------------------
 
 --
@@ -61,6 +72,14 @@ CREATE TABLE `budynek` (
   `nazwa` varchar(100) DEFAULT NULL,
   `adres` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `budynek`
+--
+
+INSERT INTO `budynek` (`budynekID`, `nazwa`, `adres`) VALUES
+(1, 'Gmach główny', 'ul. Muzealna 17'),
+(2, 'Biały Dworek', 'ul. Dworska 12');
 
 -- --------------------------------------------------------
 
@@ -74,6 +93,15 @@ CREATE TABLE `cena` (
   `koszt` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Zrzut danych tabeli `cena`
+--
+
+INSERT INTO `cena` (`cenaID`, `typ`, `koszt`) VALUES
+(1, 'ulgowy', 12),
+(2, 'normalny - wystawy stałe', 34),
+(3, 'normalny -wystawy czasowe', 50);
+
 -- --------------------------------------------------------
 
 --
@@ -84,6 +112,16 @@ CREATE TABLE `cena_wystawa` (
   `cenaID` int(6) UNSIGNED DEFAULT NULL,
   `wystawaID` int(6) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `cena_wystawa`
+--
+
+INSERT INTO `cena_wystawa` (`cenaID`, `wystawaID`) VALUES
+(3, 3),
+(1, 3),
+(2, 4),
+(1, 4);
 
 -- --------------------------------------------------------
 
@@ -116,6 +154,27 @@ CREATE TABLE `eksponat_autor` (
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `pracownik`
+--
+
+CREATE TABLE `pracownik` (
+  `pracownikID` int(6) UNSIGNED NOT NULL,
+  `imie` varchar(20) CHARACTER SET utf8 NOT NULL,
+  `nazwisko` varchar(20) CHARACTER SET utf8 NOT NULL,
+  `nazwa` varchar(100) NOT NULL,
+  `budynekID` int(6) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `pracownik`
+--
+
+INSERT INTO `pracownik` (`pracownikID`, `imie`, `nazwisko`, `nazwa`, `budynekID`) VALUES
+(1, 'Jan', 'Żurek', 'przyklad', 2);
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `sala`
 --
 
@@ -126,6 +185,17 @@ CREATE TABLE `sala` (
   `wystawaID` int(6) UNSIGNED DEFAULT NULL,
   `budynekID` int(6) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `sala`
+--
+
+INSERT INTO `sala` (`salaID`, `numer`, `wielkosc`, `wystawaID`, `budynekID`) VALUES
+(1, 1, 13, NULL, 2),
+(2, 2, 5, NULL, 2),
+(3, 1, 50, NULL, 1),
+(4, 2, 8, NULL, 1),
+(5, 3, 15, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -174,6 +244,14 @@ CREATE TABLE `uzytkownik` (
   `haslo` varchar(15) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Zrzut danych tabeli `uzytkownik`
+--
+
+INSERT INTO `uzytkownik` (`nazwa`, `email`, `haslo`) VALUES
+('agatka23', 'agatka23@gmail.com', 'brak123'),
+('przyklad', 'nic@gmail.com', 'nic');
+
 -- --------------------------------------------------------
 
 --
@@ -197,8 +275,22 @@ CREATE TABLE `wystawa` (
   `wystawaID` int(6) UNSIGNED NOT NULL,
   `nazwa` varchar(100) CHARACTER SET utf8 NOT NULL,
   `poczatek` date NOT NULL,
-  `koniec` date NOT NULL
+  `koniec` date NOT NULL,
+  `pracownikID` int(6) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `wystawa`
+--
+
+INSERT INTO `wystawa` (`wystawaID`, `nazwa`, `poczatek`, `koniec`, `pracownikID`) VALUES
+(2, 'Wojna', '2018-01-01', '2019-01-01', 1),
+(3, 'Bal u Wyspiańskiego', '2020-01-01', '2020-12-01', 1),
+(4, 'Impresjonizm realny', '2020-01-01', '2020-07-01', 1),
+(5, 'Czarna dama', '2020-03-13', '2020-09-12', 1),
+(6, 'czara owca', '1998-01-01', '1999-01-01', 1),
+(7, 'misie', '1999-01-01', '1999-02-02', 1),
+(8, '1', '0001-01-01', '0002-02-02', 1);
 
 --
 -- Indeksy dla zrzutów tabel
@@ -255,6 +347,14 @@ ALTER TABLE `eksponat_autor`
   ADD KEY `autor_eksponat` (`autorID`);
 
 --
+-- Indeksy dla tabeli `pracownik`
+--
+ALTER TABLE `pracownik`
+  ADD PRIMARY KEY (`pracownikID`),
+  ADD UNIQUE KEY `nazwa` (`nazwa`),
+  ADD KEY `pracownik_budynek` (`budynekID`);
+
+--
 -- Indeksy dla tabeli `sala`
 --
 ALTER TABLE `sala`
@@ -291,7 +391,8 @@ ALTER TABLE `wlasciciel`
 -- Indeksy dla tabeli `wystawa`
 --
 ALTER TABLE `wystawa`
-  ADD PRIMARY KEY (`wystawaID`);
+  ADD PRIMARY KEY (`wystawaID`),
+  ADD KEY `indeks` (`pracownikID`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -307,19 +408,19 @@ ALTER TABLE `autor`
 -- AUTO_INCREMENT dla tabeli `bilet`
 --
 ALTER TABLE `bilet`
-  MODIFY `biletID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `biletID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT dla tabeli `budynek`
 --
 ALTER TABLE `budynek`
-  MODIFY `budynekID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `budynekID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT dla tabeli `cena`
 --
 ALTER TABLE `cena`
-  MODIFY `cenaID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `cenaID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT dla tabeli `eksponat`
@@ -328,10 +429,16 @@ ALTER TABLE `eksponat`
   MODIFY `eksponatID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT dla tabeli `pracownik`
+--
+ALTER TABLE `pracownik`
+  MODIFY `pracownikID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT dla tabeli `sala`
 --
 ALTER TABLE `sala`
-  MODIFY `salaID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `salaID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT dla tabeli `styl`
@@ -355,7 +462,7 @@ ALTER TABLE `wlasciciel`
 -- AUTO_INCREMENT dla tabeli `wystawa`
 --
 ALTER TABLE `wystawa`
-  MODIFY `wystawaID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `wystawaID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Ograniczenia dla zrzutów tabel
@@ -392,11 +499,24 @@ ALTER TABLE `eksponat_autor`
   ADD CONSTRAINT `eksponat_autor` FOREIGN KEY (`eksponatID`) REFERENCES `eksponat` (`eksponatID`);
 
 --
+-- Ograniczenia dla tabeli `pracownik`
+--
+ALTER TABLE `pracownik`
+  ADD CONSTRAINT `pracownik_budynek` FOREIGN KEY (`budynekID`) REFERENCES `budynek` (`budynekID`),
+  ADD CONSTRAINT `pracownik_uzytkownik` FOREIGN KEY (`nazwa`) REFERENCES `uzytkownik` (`nazwa`);
+
+--
 -- Ograniczenia dla tabeli `sala`
 --
 ALTER TABLE `sala`
   ADD CONSTRAINT `budynek_sala` FOREIGN KEY (`budynekID`) REFERENCES `budynek` (`budynekID`),
   ADD CONSTRAINT `wystawa_sala` FOREIGN KEY (`wystawaID`) REFERENCES `wystawa` (`wystawaID`);
+
+--
+-- Ograniczenia dla tabeli `wystawa`
+--
+ALTER TABLE `wystawa`
+  ADD CONSTRAINT `wystawa_pracownik` FOREIGN KEY (`pracownikID`) REFERENCES `pracownik` (`pracownikID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
