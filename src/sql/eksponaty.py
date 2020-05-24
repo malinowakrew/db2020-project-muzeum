@@ -1,19 +1,6 @@
 import os
 import pymysql
-
-
-def polaczenie():
-    connection = pymysql.connect(
-        host='localhost',
-        # user=os.getenv("DB_USERNAME"),
-        user="root",
-        # password=os.getenv("DB_PASSWORD"),
-        #password="admin1",
-        database="muzeum",
-        charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    return connection
+from . import polaczenie
 
 def dodaj_eksponat(nazwa,poczatek,opis):
     try:

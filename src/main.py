@@ -19,39 +19,11 @@ while(zmienna):
     funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
 
     if (funkcjonalnosc == "1"):
-        try:
-            on = logowania.uzytkownik()
-            wyloguj = False
-        except Exception as wiadomosc:
-            if (str(wiadomosc) == "tuple index out of range"):
-                print("Niepoprawne hasło")
-            else:
-                print(f"Tutaj przyda się programista bo {wiadomosc}")
-            wyloguj = True
-                #raise Exception(wiadomosc) # na razi jest tak zrobione, że jak nie podasz dobrze to pada całość :D
-
-        while(wyloguj == False):
-            print("1. Dodaj wystawę\n"
-                  "2. Dodaj eksponat\n"
-                  "3. Wyloguj")
-
-            funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
-
-            if (funkcjonalnosc == "1"):
-                print("\n \t ################### \n")
-                niezalogowany = wystawy_app.niezalogowany()
-                niezalogowany.dodaj_wystawe()
-
-            elif (funkcjonalnosc == "2"):
-                print("\n \t ################### \n")
-                niezalogowany = eksponaty_app.niezalogowany()
-                niezalogowany.dodaj_eksponat()
-
-            elif (funkcjonalnosc == "3"):
-                wyloguj = True
-            else:
-                print("Błąd wpisu")
-
+        wybor_pracownik = input("Aby zalogować się jako pracownik kliknij 9 ")
+        if wybor_pracownik == "9":
+            logowania.sciezka_pracownika()
+        else:
+            logowania.sciezka_uzytkownika()
 
     elif (funkcjonalnosc == "2"):
         pass

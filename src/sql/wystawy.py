@@ -1,20 +1,6 @@
 import os
 import pymysql
-
-
-def polaczenie():
-    connection = pymysql.connect(
-        host='localhost',
-        # user=os.getenv("DB_USERNAME"),
-        user="admin",
-        # password=os.getenv("DB_PASSWORD"),
-        password="123",
-        database="muzeum",
-        charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    return connection
-
+from . import polaczenie
 
 def wyszukiwarka_aktywnych_wystaw(dzis):
     try:
@@ -25,11 +11,11 @@ def wyszukiwarka_aktywnych_wystaw(dzis):
             cursor.execute(sql)
             result = cursor.fetchall()
 
-    except EOFError:
-        raise Exception("Błąd bazy")
-    finally:
+        connection.close()
         return result
-        self.connection.close()
+    except:
+        raise Exception("Błąd bazy")
+
 
 
 def najczesciej_odwiedzane_wystawy(wybor, dzis):
@@ -57,40 +43,30 @@ def najczesciej_odwiedzane_wystawy(wybor, dzis):
 
             cursor.execute(sql2)
             result = cursor.fetchall()
-            return result
+
+        connection.close()
+        return result
     except:
         raise Exception("Błąd bazy")
-    finally:
-        connection.close()
 
 
-def dodaj_wystawe(nazwa, poczatek, zakonczenie):
+def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik):
     try:
         connection = polaczenie()
         with connection.cursor() as cursor:
             # dodajemy do tablicy Wystawa
-            sql = f"INSERT INTO wystawa (nazwa,poczatek,koniec) VALUES(%s, '{poczatek}' ,'{zakonczenie}')"
-            cursor.execute(sql, nazwa)
-            connection.commit()
-    except EOFError:
-        raise Exception("Błąd bazy")
-    finally:
-        return 1
-        connection.close()
-
-def zaloguj(login, haslo):
-    try:
-        connection = polaczenie()
-        with connection.cursor() as cursor:
-            sql3 = (
-                f"SELECT uzytkownik.nazwa, uzytkownik.email "
-                f"FROM uzytkownik "
-                f"WHERE uzytkownik.nazwa = '{login}' AND uzytkownik.haslo = '{haslo}';"
+            sql = (
+                f"INSERT INTO wystawa (nazwa, poczatek, koniec, pracownikID) " 
+                f" VALUES('{nazwa}', '{poczatek}' ,'{zakonczenie}', {pracownik});"
             )
-            cursor.execute(sql3)
-            result = cursor.fetchall()
-            return result
+            cursor.execute(sql)
+            connection.commit()
+            connection.close()
+        return 1
     except:
         raise Exception("Błąd bazy")
-    finally:
-        connection.close()
+
+
+
+
+
