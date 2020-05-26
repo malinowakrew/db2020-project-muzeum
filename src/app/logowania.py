@@ -10,6 +10,7 @@ import app.eksponaty as eksponaty_app
 ## dodatkowe
 import datetime
 
+
 class Uzytkownik(wystawy_app.niezalogowany):
     def __init__(self):
         super().__init__()
@@ -20,7 +21,7 @@ class Uzytkownik(wystawy_app.niezalogowany):
     def logowanie(self):
         print("Oto nasz panel logowania")
         log = 1
-        while(log):
+        while (log):
             login = input("Login: ")
             haslo = input("Hasło: ")
 
@@ -43,6 +44,8 @@ class Uzytkownik(wystawy_app.niezalogowany):
                 else:
                     raise Exception("Za dużo prób")
 
+
+
 class Pracownik(Uzytkownik):
     def __init__(self):
         super().__init__()
@@ -57,30 +60,36 @@ class Pracownik(Uzytkownik):
 
     def dodaj_wystawe(self):
         try:
-                nazwa = input("Podaj nazwę wystawy: ")
+            nazwa = input("Podaj nazwę wystawy: ")
+            startR = input("Będzie trwać od: \nRok:")
+            startM = input("Miesiąc:")
+            startD = input("Dzień:")
+            start = datetime.datetime(int(startR), int(startM), int(startD))
+            koniecR = input("Kończy się: \nRok:")
+            koniecM = input("Miesiąc:")
+            koniecD = input("Dzień:")
+            koniec = datetime.datetime(int(koniecR), int(koniecM), int(koniecD))
+            poczatek = start.strftime('%Y-%m-%d')
+            zakonczenie = koniec.strftime('%Y-%m-%d')
+            print('Wolne sale w twoim budynku: ')
+            sale = zapytania_sale.pokaz_sale(self.budynekID)
+            for iter, sala in enumerate(sale):
+                print(f"{iter + 1}. Sala nr {sala['numer']}")
+            #print(sale)
+            sala = input("Podaj numer sali: ")
 
-                startR = input("Będzie trwać od: \nRok:")
-                startM = input("Miesiąc:")
-                startD = input("Dzień:")
-                start = datetime.datetime(int(startR), int(startM), int(startD))
-                koniecR = input("Kończy się: \nRok:")
-                koniecM = input("Miesiąc:")
-                koniecD = input("Dzień:")
-                koniec = datetime.datetime(int(koniecR), int(koniecM), int(koniecD))
-                poczatek = start.strftime('%Y-%m-%d')
-                zakonczenie = koniec.strftime('%Y-%m-%d')
+            wybor = input(
+                f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek} do {zakonczenie}\n\t Sala nr {sala}\n")
+            wybor = wybor.lower()
 
-                wybor = input(f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek} do {zakonczenie}\n")
-                wybor = wybor.lower()
+            if (wybor == "tak"):
+                # dodanie wystawy do bazy danych
+                result = zapytania_wystawy.dodaj_wystawe(nazwa, poczatek, zakonczenie, self.pracownikID)
+                # przypisanie ID wystawy do odpowiadajacej jej sali
+                result2 = zapytania_sale.dodaj_wystawe(nazwa, sala, self.budynekID)
 
-                ## sprawdzamy wolne sale - trzeba tu pokombinować
-                sale = zapytania_sale.pokaz_sale(self.budynekID)
-
-                if (wybor == "tak"):
-                    result = zapytania_wystawy.dodaj_wystawe(nazwa, poczatek, zakonczenie, self.pracownikID)
-
-                if result == 1:
-                    print("Wystawa dodana")
+            if result & result2 == 1:
+                print("Wystawa dodana")
 
         except Exception as wiadomosc:
             if wiadomosc == "Błąd bazy":
@@ -90,7 +99,6 @@ class Pracownik(Uzytkownik):
             return 0
         finally:
             return 1
-
 
 
 def sciezka_uzytkownika():
@@ -103,6 +111,7 @@ def sciezka_uzytkownika():
             print(f"Tutaj przyda się programista bo {wiadomosc}")
 
     wyloguj = False
+
 
 def sciezka_pracownika():
     try:
@@ -135,4 +144,37 @@ def sciezka_pracownika():
         else:
             print("Błąd wpisu")
 
+def rejestracja():
+    try:
+        mail = input("Podaj email: ")
+        res1 = zapytania_logowania.powtorzenie("email",mail)
+        if len(res1) == 1:
+            print("Ten email ma już przypisane konto.")
+            return 0
+        else:
+            nazwa = input("Podaj nazwę użytkownika: ")
+            res2 = zapytania_logowania.powtorzenie("nazwa",nazwa)
+            if len(res2) == 1:
+                print("Nazwa użytkownika już zajęta. Spróbuj ponownie.")
+                return 0
+            else:
+                haslo = input("Podaj haslo: ")
+                wybor = input(
+                    f"Czy dane są poprawne? \n\t Email: {mail} \n\t Login: {nazwa} \n\t Haslo: {haslo}\n")
+                wybor = wybor.lower()
 
+                if (wybor == "tak"):
+                    # dodanie uzytkownika do bazy danych
+                     result = zapytania_logowania.dodaj_uzytkownika(mail, nazwa, haslo)
+
+                if result == 1:
+                   print("Twoje konto zostalo utworzone pomyślnie!")
+
+    except Exception as wiadomosc:
+        if wiadomosc == "Błąd bazy":
+            print("Niestety baza nie może Cię obsłużyć. To jej wina")
+        else:
+            print(wiadomosc)
+        return 0
+    finally:
+        return 1

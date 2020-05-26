@@ -61,11 +61,6 @@ def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik):
             )
             cursor.execute(sql)
             connection.commit()
-
-            sql2 = (
-                f"UPDATE TABLE sala "
-                f"SET sala.wystawaID = '{wystawaID}'"
-            )
             connection.close()
         return 1
     except:

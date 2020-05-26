@@ -26,7 +26,8 @@ while(zmienna):
             logowania.sciezka_uzytkownika()
 
     elif (funkcjonalnosc == "2"):
-        pass
+        print("\n \t ################### \n")
+        logowania.rejestracja()
     elif (funkcjonalnosc == "3"):
         print("\n \t ################### \n"
               "Witamy, możesz w ograniczonu sposób korzystać z naszej bazy. \n"
