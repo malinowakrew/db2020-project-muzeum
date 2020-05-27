@@ -18,6 +18,45 @@ class Uzytkownik(wystawy_app.niezalogowany):
         self.nazwa = bufor['nazwa']
         self.email = bufor['email']
 
+    def Kup_bilet(self):
+        try:
+            wystawa = input("\nPodaj nazwę wystawy:")
+            dzisiejsza_data = datetime.datetime.now()
+            dzis = dzisiejsza_data.strftime("%Y-%m-%d")
+
+            znizka=int(input("1.Bilet ulgowy 10 złoty\n2.Bilet normalny 20zł\nWybierz bilet: "))
+            if znizka == 1:
+                wybor = input(
+                    f"Cena biletu wynosi 10 złoty. Czy kontynuować z transakcją? (tak/nie)\n")
+                wybor = wybor.lower()
+                if (wybor == "tak"):
+                    # dodanie biletu do bazy danych
+                    result = zapytania_wystawy.dodaj_bilet(10, dzis, 1, wystawa,  self.nazwa)
+                    if result:
+                        print("Bilet kupiony pomyślnie.")
+            elif znizka == 2:
+                wybor = input(
+                    f"Cena biletu wynosi 20 złoty. Czy kontynuować z transakcją? (tak/nie)\n")
+                wybor = wybor.lower()
+
+                if (wybor == "tak"):
+                    # dodanie biletu do bazy danych
+                    result = zapytania_wystawy.dodaj_bilet(20, dzis, 1, wystawa,  self.nazwa)
+                    if result:
+                        print("Bilet kupiony pomyślnie.")
+
+            else:
+                print("Błąd")
+
+        except Exception as wiadomosc:
+            if wiadomosc == "Błąd bazy":
+                print("Niestety baza nie może Cię obsłużyć. To jej wina")
+            else:
+                print(wiadomosc)
+            return 0
+        finally:
+            return 1
+
     def logowanie(self):
         print("Oto nasz panel logowania")
         log = 1
@@ -43,6 +82,7 @@ class Uzytkownik(wystawy_app.niezalogowany):
                         return 0
                 else:
                     raise Exception("Za dużo prób")
+
 
 
 
@@ -101,6 +141,7 @@ class Pracownik(Uzytkownik):
             return 1
 
 
+
 def sciezka_uzytkownika():
     try:
         uzytkownik = Uzytkownik()
@@ -111,6 +152,34 @@ def sciezka_uzytkownika():
             print(f"Tutaj przyda się programista bo {wiadomosc}")
 
     wyloguj = False
+
+    while (wyloguj == False):
+        print(
+              "Witamy, możesz korzystać z naszej bazy. \n"
+              "1. Sprawdź aktualne wystawy \n"
+              "2. Sprawdź popularne wystawy \n"
+              "3. Kup bilet \n"
+              "4. Wyloguj")
+        funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
+        niezalogowany = wystawy_app.niezalogowany()
+
+        if (funkcjonalnosc == "1"):
+            dzis = datetime.datetime.now()
+            niezalogowany.wyszukiwarka_aktywnych_wystaw()
+            zmienna =  0
+
+        elif (funkcjonalnosc == "2"):
+            niezalogowany.najczesciej_odwiedzane_wystawy()
+
+        elif (funkcjonalnosc == "3"):
+            niezalogowany.wyszukiwarka_aktywnych_wystaw()
+            uzytkownik.Kup_bilet()
+
+        elif (funkcjonalnosc == "4"):
+            print("Wylogowano \n\n")
+            wyloguj = True
+        else:
+            print("Błąd wpisu")
 
 
 def sciezka_pracownika():

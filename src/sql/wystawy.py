@@ -66,6 +66,22 @@ def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik):
     except:
         raise Exception("Błąd bazy")
 
+def dodaj_bilet(cena, data, wartosc, wystawa,  nazwa):
+    try:
+        connection = polaczenie()
+        with connection.cursor() as cursor:
+            # dodajemy do tablicy Bilet
+            sql = (
+                f"INSERT INTO bilet (cena, data_zakupu, zakupiony, wystawaID, nazwa_uzytkownika) " 
+                f" VALUES({cena}, '{data}' ,{wartosc}, (SELECT wystawaID FROM wystawa WHERE nazwa = '{wystawa}') , '{nazwa}' );"
+            )
+            cursor.execute(sql)
+            connection.commit()
+            connection.close()
+        return 1
+    except:
+        raise Exception("Błąd bazy")
+
 
 
 
