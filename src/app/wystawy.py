@@ -20,15 +20,13 @@ class niezalogowany():
             # informacje dodatkowe dla użytkownika
             if (dzisiejsza_data.weekday() == 0):
                 print("Pamiętaj tylko, że dziś poniedziałek! MUZEUM NIECZYNNE :)")
-
+            return 1
         except Exception as wiadomosc:
             if wiadomosc == "Błąd bazy":
                 print("Niestety baza nie może Cię obsłużyć. To jej wina")
             else:
                 print(wiadomosc)
             return 0
-        finally:
-            return 1
 
     def najczesciej_odwiedzane_wystawy(self):
         try:
@@ -52,15 +50,13 @@ class niezalogowany():
                 print("TOP 5")
                 for iter, wystawa in enumerate(result):
                     print(f"{iter + 1}. {wystawa['nazwa']} \t otwarta do {wystawa['koniec']}")
-
+            return 1
         except Exception as wiadomosc:
             if wiadomosc == "Błąd bazy":
                 print("Niestety baza nie może Cię obsłużyć. To jej wina")
             else:
                 print(wiadomosc)
             return 0
-        finally:
-            return 1
 
 
 

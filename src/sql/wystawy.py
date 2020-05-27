@@ -83,7 +83,22 @@ def dodaj_bilet(cena, data, wartosc, wystawa,  nazwa):
         raise Exception("Błąd bazy")
 
 
-
+def sprawdz_ceny(nazwa_wystawy):
+    try:
+        connection = polaczenie()
+        with connection.cursor() as cursor:
+            sql = (
+                f"SELECT DISTINCT wystawa.nazwa, cena.typ, cena.koszt "
+                f"FROM wystawa JOIN cena_wystawa ON wystawa.wystawaID = cena_wystawa.wystawaID "
+                f"JOIN cena ON cena.cenaID = cena_wystawa.cenaID "
+                f"WHERE wystawy.nazwa = '{nazwa_wystawy}';"
+            )
+            cursor.execute(sql)
+            result = cursor.fetchall()
+        connection.close()
+        return result
+    except Exception as bład:
+        raise Exception(bład)
 
 
 

@@ -9,6 +9,7 @@ import app.eksponaty as eksponaty_app
 
 ## dodatkowe
 import datetime
+from re import search
 
 
 class Uzytkownik(wystawy_app.niezalogowany):
@@ -25,6 +26,9 @@ class Uzytkownik(wystawy_app.niezalogowany):
             dzis = dzisiejsza_data.strftime("%Y-%m-%d")
 
             znizka=int(input("1.Bilet ulgowy 10 złoty\n2.Bilet normalny 20zł\nWybierz bilet: "))
+
+            zapytania_wystawy.sprawdz_ceny('1')
+
             if znizka == 1:
                 wybor = input(
                     f"Cena biletu wynosi 10 złoty. Czy kontynuować z transakcją? (tak/nie)\n")
@@ -217,9 +221,12 @@ def rejestracja():
     try:
         mail = input("Podaj email: ")
         res1 = zapytania_logowania.powtorzenie("email",mail)
+        boolean = search(".@gmail.com$", res1[0]["email"])
         if len(res1) == 1:
             print("Ten email ma już przypisane konto.")
             return 0
+        elif boolean != True:
+                raise ValueError("Nieprawidłowa forma emaila")
         else:
             nazwa = input("Podaj nazwę użytkownika: ")
             res2 = zapytania_logowania.powtorzenie("nazwa",nazwa)
@@ -240,7 +247,7 @@ def rejestracja():
                    print("Twoje konto zostalo utworzone pomyślnie!")
 
     except Exception as wiadomosc:
-        if wiadomosc == "Błąd bazy":
+        if str(wiadomosc) == "Błąd bazy":
             print("Niestety baza nie może Cię obsłużyć. To jej wina")
         else:
             print(wiadomosc)

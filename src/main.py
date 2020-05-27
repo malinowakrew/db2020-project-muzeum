@@ -1,4 +1,4 @@
-import sql.eksponaty as api
+import app.eksponaty as api
 import os
 import sql.wystawy as wystawy
 import app.wystawy as wystawy_app
@@ -17,6 +17,8 @@ while(zmienna):
           "2. Załóż konto \n"
           "3. Przeglądaj zbiory bez konta \n")
     funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
+    ten = api.niezalogowany()
+    ten.dodaj_eksponat()
 
     if (funkcjonalnosc == "1"):
         wybor_pracownik = input("Aby zalogować się jako pracownik kliknij 9 ")
