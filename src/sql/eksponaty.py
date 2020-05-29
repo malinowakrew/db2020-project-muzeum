@@ -14,7 +14,7 @@ def dodaj_eksponat(nazwa, poczatek, opis, wystawa_nazwa):
             connection.commit()
         connection.close()
         return 1
-    except Exception as bład:
-        raise Exception(bład)
+    except Exception as błąd:
+        raise Exception(błąd)
 
 

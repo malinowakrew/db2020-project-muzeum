@@ -17,8 +17,9 @@ while(zmienna):
           "2. Załóż konto \n"
           "3. Przeglądaj zbiory bez konta \n")
     funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
-    ten = api.niezalogowany()
-    ten.dodaj_eksponat()
+
+    #ten = api.niezalogowany()
+    #ten.dodaj_eksponat()
 
     if (funkcjonalnosc == "1"):
         wybor_pracownik = input("Aby zalogować się jako pracownik kliknij 9 ")

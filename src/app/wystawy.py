@@ -3,22 +3,21 @@ import sql.wystawy as zapytania_wystawy
 
 class niezalogowany():
     def __init__(self):
-        pass
+        self.dzisiejsza_data = datetime.datetime.now()
+        self.dzis = self.dzisiejsza_data.strftime("%Y-%m-%d")
 
     def wyszukiwarka_aktywnych_wystaw(self):
         try:
             # sprawdzamy dzisiejszą datę
-            dzisiejsza_data = datetime.datetime.now()
-            dzis = dzisiejsza_data.strftime("%Y-%m-%d")
-            print(f"\t Dziś mamy {dzis}")
+            print(f"\t Dziś mamy {self.dzis}")
 
             # wykonujemy zapytanie do bazy i wyświetlamy
-            result = zapytania_wystawy.wyszukiwarka_aktywnych_wystaw(dzis)
+            result = zapytania_wystawy.wyszukiwarka_aktywnych_wystaw(self.dzis)
             for iter, wystawa in enumerate(result):
                 print(f"{iter + 1}. {wystawa['nazwa']} \t otwarta do {wystawa['koniec']}")
 
             # informacje dodatkowe dla użytkownika
-            if (dzisiejsza_data.weekday() == 0):
+            if (self.dzisiejsza_data.weekday() == 0):
                 print("Pamiętaj tylko, że dziś poniedziałek! MUZEUM NIECZYNNE :)")
             return 1
         except Exception as wiadomosc:
@@ -35,10 +34,7 @@ class niezalogowany():
             wybor = wybor.lower()
 
             if (wybor == "tak"):
-                dzisiejsza_data = datetime.datetime.now()
-                dzis = dzisiejsza_data.strftime("%Y-%m-%d")
-
-                result = zapytania_wystawy.najczesciej_odwiedzane_wystawy(wybor, dzis)
+                result = zapytania_wystawy.najczesciej_odwiedzane_wystawy(wybor, self.dzis)
 
                 print("Aktywne TOP 5")
                 for iter, wystawa in enumerate(result):
