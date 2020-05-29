@@ -122,7 +122,6 @@ class Pracownik(Uzytkownik):
                 for iter, sala in enumerate(sale):
                     print(f"{iter + 1}. Sala nr {sala['numer']}")
 
-
                 sala_w = int(input("Podaj numer sali: "))
 
                 wybor = input(f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek} do {zakonczenie}\n\t Sala nr {(sale[sala_w - 1])['salaID']}\n")
@@ -166,18 +165,22 @@ class Pracownik(Uzytkownik):
                 print("Możesz dodać eksponat do następujących wystaw: ")
                 #wyświetl obecne wystawy i przyszłe
                 wielkosc = zapytania_sale.wielkosc_wystawy(self.dzis)
-                dostepne_wystawy = []
-                for wystawa in wielkosc:
-                    dostepne_wystawy.append(wystawa['nazwa'])
-                    print(wystawa['nazwa'])
+                wielkosc = wielkosc.fillna(0.0)
 
+                dostepne_wystawy = wielkosc[wielkosc["wielkosc_wystawy"] > wielkosc["ilosc_eksponatow"]]
+                print(dostepne_wystawy)
                 wybor = 1
-                while(wybor != '0'):
-                    wybor = input(f"Wybierz wystawę do której chcesz dodać eksponat: \n"
-                                  f"jeśli chcesz zrezygnować z dodania wpisz 0 \n")
 
-                    if (wybor in dostepne_wystawy):
-                        result = zapytania_eksponaty.dodaj_eksponat(nazwa, poczatek, opis, wybor)
+                while(wybor != '0'):
+                    wybor = int(input(f"Wybierz wystawę do której chcesz dodać eksponat: \n"
+                                  f"jeśli chcesz zrezygnować z dodania wpisz 0 \n"))
+
+
+                    if (wybor in dostepne_wystawy.index):
+                        nazwa_wybranej_wystawy = dostepne_wystawy.iloc[wybor-1, 1]
+
+                        print(f"Wybrałeś wystawę {nazwa_wybranej_wystawy}")
+                        result = zapytania_eksponaty.dodaj_eksponat(nazwa, poczatek, opis, nazwa_wybranej_wystawy)
 
                         if (result == 1):
                             print("\n Dodano eksponat do wystawy \n")

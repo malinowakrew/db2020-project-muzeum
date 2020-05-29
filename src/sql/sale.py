@@ -1,7 +1,19 @@
 import os
 import pymysql
-from . import polaczenie
-
+#from . import polaczenie
+def polaczenie():
+    connection = pymysql.connect(
+        host='localhost',
+        # user=os.getenv("DB_USERNAME"),
+        user="admin",
+        # password=os.getenv("DB_PASSWORD"),
+        password="123",
+        database="muzeum",
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    return connection
+import pandas as pd
 
 def pokaz_dostepne_sale(budynekID, poczatek, koniec):
     try:
@@ -61,9 +73,36 @@ def wielkosc_wystawy(dzis):
                 f"WHERE wystawa.koniec < DATE '{dzis}'"
                 f"GROUP BY wystawa.wystawaID"
             )
-            cursor.execute(sql)
-            result = cursor.fetchall()
+
+            sql2 = (
+                f"SELECT COUNT(eksponat.eksponatID) as ilosc_eksponatow, wystawa.nazwa FROM eksponat "
+                f"LEFT JOIN wystawa ON wystawa.wystawaID = eksponat.wystawaID GROUP BY wystawa.wystawaID;"
+            )
+
+            sql3 = (
+                f"SELECT SUM(sala.wielkosc) as wielkosc_wystawy, wystawa.nazwa FROM wystawa "
+                f"LEFT JOIN wystawa_sala ON wystawa_sala.wystawaID = wystawa.wystawaID "
+                f"LEFT JOIN sala ON sala.salaID = wystawa_sala.salaID "
+                f"GROUP BY wystawa.wystawaID;"
+            )
+            cursor.execute(sql2)
+            result2 = pd.DataFrame(cursor.fetchall())
+
+            cursor.execute(sql3)
+            result3 = pd.DataFrame(cursor.fetchall())
+
+            result = pd.merge(result3, result2, on="nazwa", how='outer')
+
         connection.close()
         return result
+
     except Exception as błąd:
         raise Exception(błąd)
+
+
+def main():
+    wielkosc_wystawy("12")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,18 +1,6 @@
 import os
 import pymysql
-#from . import polaczenie
-def polaczenie():
-    connection = pymysql.connect(
-        host='localhost',
-        # user=os.getenv("DB_USERNAME"),
-        user="admin",
-        # password=os.getenv("DB_PASSWORD"),
-        password="123",
-        database="muzeum",
-        charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    return connection
+from . import polaczenie
 
 
 def wyszukiwarka_aktywnych_wystaw(dzis):
@@ -83,17 +71,17 @@ def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, salaID):
 
             cursor.execute(sql3)
             result = ((cursor.fetchall())[0])["wystawaID"]
-            #result = cursor.fetchall()
-            print(result)
 
             sql2 = f"INSERT INTO wystawa_sala(salaID, wystawaID) VALUES ({salaID}, {result});"
             cursor.execute(sql2)
             connection.commit()
-
+            w = 1
     except Exception as błąd:
+        w = 0
         raise Exception(błąd)
     finally:
         connection.close()
+        return w
 
 def dodaj_bilet(cena, data, wartosc, wystawa,  nazwa):
     try:
@@ -131,9 +119,3 @@ def sprawdz_ceny(nazwa_wystawy):
 
 
 
-def main():
-    dodaj_wystawe("nazwa", "1999-01-01", "1999-12-12", 2, 1)
-
-
-if __name__ == "__main__":
-    main()
