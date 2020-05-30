@@ -120,7 +120,7 @@ def sprawdz_ceny(nazwa_wystawy):
                 f"SELECT DISTINCT wystawa.nazwa, cena.typ, cena.koszt "
                 f"FROM wystawa JOIN cena_wystawa ON wystawa.wystawaID = cena_wystawa.wystawaID "
                 f"JOIN cena ON cena.cenaID = cena_wystawa.cenaID "
-                f"WHERE wystawy.nazwa = '{nazwa_wystawy}';"
+                f"WHERE wystawa.nazwa = '{nazwa_wystawy}';"
             )
             cursor.execute(sql)
             result = cursor.fetchall()
