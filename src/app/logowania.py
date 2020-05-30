@@ -25,27 +25,49 @@ class Uzytkownik(wystawy_app.niezalogowany):
             dzisiejsza_data = datetime.datetime.now()
             dzis = dzisiejsza_data.strftime("%Y-%m-%d")
 
-            znizka=int(input("1.Bilet ulgowy 10 złoty\n2.Bilet normalny 20zł\nWybierz bilet: "))
+            #znizka=int(input("1.Bilet ulgowy 10 złoty\n2.Bilet normalny 20zł\nWybierz bilet: "))
 
-            zapytania_wystawy.sprawdz_ceny('1')
+            ceny=zapytania_wystawy.sprawdz_ceny(wystawa)
+            for iter, cena in enumerate(ceny):
+                print(f"{iter + 1}. {cena['typ']} \t  {cena['koszt']} zł")
+            znizka = int(input ("Wybierz bilet: "))
 
             if znizka == 1:
+                for iter2, cena2 in enumerate(ceny):
+                    if iter2 + 1 == 2:
+                        break
+                    koszt = cena2['koszt']
+
                 wybor = input(
-                    f"Cena biletu wynosi 10 złoty. Czy kontynuować z transakcją? (tak/nie)\n")
+                    f"Cena biletu wynosi {koszt} zł. Czy kontynuować z transakcją? (tak/nie)\n")
                 wybor = wybor.lower()
                 if (wybor == "tak"):
                     # dodanie biletu do bazy danych
-                    result = zapytania_wystawy.dodaj_bilet(10, dzis, 1, wystawa,  self.nazwa)
+                    result = zapytania_wystawy.dodaj_bilet(koszt, dzis, 1, wystawa,  self.nazwa)
                     if result:
                         print("Bilet kupiony pomyślnie.")
             elif znizka == 2:
-                wybor = input(
-                    f"Cena biletu wynosi 20 złoty. Czy kontynuować z transakcją? (tak/nie)\n")
-                wybor = wybor.lower()
+                for iter2, cena2 in enumerate(ceny):
+                    if iter2 + 1 == 3:
+                        break
+                    koszt = cena2['koszt']
 
+                wybor = input(
+                    f"Cena biletu wynosi {koszt} zł. Czy kontynuować z transakcją? (tak/nie)\n")
+                wybor = wybor.lower()
                 if (wybor == "tak"):
                     # dodanie biletu do bazy danych
-                    result = zapytania_wystawy.dodaj_bilet(20, dzis, 1, wystawa,  self.nazwa)
+                    result = zapytania_wystawy.dodaj_bilet(koszt, dzis, 1, wystawa, self.nazwa)
+                    if result:
+                        print("Bilet kupiony pomyślnie.")
+            elif znizka == 3:
+                koszt=cena['koszt'] #=3
+                wybor = input(
+                    f"Cena biletu wynosi {koszt} zł. Czy kontynuować z transakcją? (tak/nie)\n")
+                wybor = wybor.lower()
+                if (wybor == "tak"):
+                    # dodanie biletu do bazy danych
+                    result = zapytania_wystawy.dodaj_bilet(koszt, dzis, 1, wystawa, self.nazwa)
                     if result:
                         print("Bilet kupiony pomyślnie.")
 
@@ -105,17 +127,23 @@ class Pracownik(Uzytkownik):
     def dodaj_wystawe(self):
         try:
             nazwa = input("Podaj nazwę wystawy: ")
+            rodzaj= input("Czy jest wystawa czasowa? (tak/nie): ")
             startR = input("Będzie trwać od: \nRok:")
             startM = input("Miesiąc:")
             startD = input("Dzień:")
             start = datetime.datetime(int(startR), int(startM), int(startD))
-            koniecR = input("Kończy się: \nRok:")
-            koniecM = input("Miesiąc:")
-            koniecD = input("Dzień:")
-            koniec = datetime.datetime(int(koniecR), int(koniecM), int(koniecD))
             poczatek = start.strftime('%Y-%m-%d')
-            zakonczenie = koniec.strftime('%Y-%m-%d')
-            print(f"Wybrany termin {poczatek} i {zakonczenie}")
+            if rodzaj == 'tak':
+                koniecR = input("Kończy się: \nRok:")
+                koniecM = input("Miesiąc:")
+                koniecD = input("Dzień:")
+                koniec = datetime.datetime(int(koniecR), int(koniecM), int(koniecD))
+                zakonczenie = koniec.strftime('%Y-%m-%d')
+                print(f"Wybrany termin: {poczatek} do {zakonczenie}")
+            else:
+                koniec = datetime.datetime(9999,12,31)
+                zakonczenie = koniec.strftime('%Y-%m-%d')
+                print(f"Wybrany termin: Od {poczatek}")
             print('Wolne sale w twoim budynku: ')
             sale = zapytania_sale.pokaz_dostepne_sale(self.budynekID, poczatek, zakonczenie)
             if len(sale) != 0:
@@ -123,8 +151,10 @@ class Pracownik(Uzytkownik):
                     print(f"{iter + 1}. Sala nr {sala['numer']}")
 
                 sala_w = int(input("Podaj numer sali: "))
-
-                wybor = input(f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek} do {zakonczenie}\n\t Sala nr {(sale[sala_w - 1])['salaID']}\n")
+                if rodzaj == 'tak':
+                    wybor = input(f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek} do {zakonczenie}\n\t Sala nr {(sale[sala_w - 1])['salaID']}\n")
+                else:
+                    wybor = input(f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek}1\n\t Sala nr {(sale[sala_w - 1])['salaID']}\n")
                 wybor = wybor.lower()
 
                 if (wybor == "tak"):
