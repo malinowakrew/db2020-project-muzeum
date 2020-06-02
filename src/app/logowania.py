@@ -232,6 +232,26 @@ class Pracownik(Uzytkownik):
                 print(wiadomosc)
             return 0
 
+    def statystyki(self):
+        print("Możesz teraz sprawdzić statystyki w swoim budynku\n"
+              "1. Statystyki ze wszystkich wystaw\n"
+              "2. Statystyki z dzisiejszego dnia")
+
+        wybor = input("Wybierz numer, który Cię interesuje: ")
+        try:
+            if wybor == "1":
+                ilosc_biletow = zapytania_wystawy.statystyki(self.budynekID)
+                for wystawa in ilosc_biletow:
+                    print(f"Wystawa {wystawa['nazwa']} została odwiedzona przez {wystawa['ilosc']} użytkowników tej pięknej aplikacji")
+            elif wybor == "2":
+                print("To masz problem")
+            else:
+                print("Niepoprawny wybór - skup się pracowniku.\n")
+        except Exception as błąd:
+            print(błąd)
+
+
+
 
 
 
@@ -282,20 +302,23 @@ def sciezka_uzytkownika():
 
 
 def sciezka_pracownika():
+    wyloguj = True
     try:
         pracownik = Pracownik()
+        wyloguj = False
     except Exception as wiadomosc:
         if (str(wiadomosc) == "tuple index out of range"):
             print("Niepoprawne hasło")
         else:
             print(f"Tutaj przyda się programista bo {wiadomosc}")
 
-    wyloguj = False
+
 
     while (wyloguj == False):
-        print("1. Dodaj wystawę\n"
+        print("\n1. Dodaj wystawę\n"
               "2. Dodaj eksponat\n"
-              "3. Wyloguj")
+              "3. Pokaż statystyki zwiedzania\n"
+              "4. Wyloguj")
         funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
 
         if (funkcjonalnosc == "1"):
@@ -305,8 +328,11 @@ def sciezka_pracownika():
         elif (funkcjonalnosc == "2"):
             print("\n \t ################### \n")
             pracownik.dodaj_eksponat()
-
         elif (funkcjonalnosc == "3"):
+            print("\n \t ################### \n")
+            pracownik.statystyki()
+
+        elif (funkcjonalnosc == "4"):
             print("Wylogowano \n\n")
             wyloguj = True
         else:

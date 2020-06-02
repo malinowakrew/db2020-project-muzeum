@@ -6,12 +6,12 @@ load_dotenv(os.getcwd() + "../.env")
 
 def polaczenie():
     connection = pymysql.connect(
-        host='localhost',
+        host="localhost",
         # user=os.getenv("DB_USERNAME"),
         user="admin",
         # password=os.getenv("DB_PASSWORD"),
         password="123",
-        database="muzeum_t",
+        database="muzeum",
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
     )

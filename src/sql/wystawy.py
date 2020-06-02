@@ -166,12 +166,19 @@ def usun_bilet(nazwa,data,uzytkownik):
         raise Exception(błąd)
 
 
-def statystyki():
+def statystyki(budynekID):
     try:
         connection = polaczenie()
         with connection.cursor() as cursor:
             sql = (
-                f"SELECT COUNT("
+                f"SELECT COUNT(bilet.biletID) as ilosc, wystawa.nazwa "
+                f"FROM bilet "
+                f"JOIN wystawa ON wystawa.wystawaID = bilet.wystawaID "
+                f"JOIN pracownik ON pracownik.pracownikID = wystawa.pracownikID "
+                f"JOIN budynek ON budynek.budynekID = pracownik.budynekID "
+                f"WHERE budynek.budynekID = {budynekID} "
+                f"GROUP BY wystawa.nazwa "
+                f"ORDER BY ilosc;"
             )
             cursor.execute(sql)
             result = cursor.fetchall()
