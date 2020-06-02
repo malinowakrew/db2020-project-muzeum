@@ -146,8 +146,8 @@ def sprawdz_bilety():
 
         connection.close()
         return result
-    except:
-        raise Exception("Błąd bazy")
+    except Exception as błąd:
+        raise Exception(błąd)
 
 def usun_bilet(nazwa,data,uzytkownik):
     try:
@@ -162,8 +162,24 @@ def usun_bilet(nazwa,data,uzytkownik):
             connection.commit()
             connection.close()
         return 1
-    except:
-        raise Exception("Błąd bazy")
+    except Exception as błąd:
+        raise Exception(błąd)
+
+
+def statystyki():
+    try:
+        connection = polaczenie()
+        with connection.cursor() as cursor:
+            sql = (
+                f"SELECT COUNT("
+            )
+            cursor.execute(sql)
+            result = cursor.fetchall()
+        connection.close()
+        return result
+    except Exception as błąd:
+        raise Exception(błąd)
+
 
 
 
