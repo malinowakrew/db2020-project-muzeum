@@ -1,7 +1,8 @@
 import os
 import pymysql
 from . import polaczenie
-
+## dodatkowe
+import datetime
 
 def wyszukiwarka_aktywnych_wystaw(dzis):
     try:
@@ -74,6 +75,17 @@ def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, salaID):
 
             sql2 = f"INSERT INTO wystawa_sala(salaID, wystawaID) VALUES ({salaID}, {result});"
             cursor.execute(sql2)
+
+            koniec = datetime.datetime(9999, 12, 31)
+            koniecCmp = koniec.strftime('%Y-%m-%d')
+            if zakonczenie == koniecCmp:
+                # 1 i 3  to  ulgowe  i normalne dla stalej
+                sql4 = f"INSERT INTO cena_wystawa(cenaID, wystawaID) VALUES (1, {result}), (2,  {result});"
+            else:
+                # 1 i 2  to  ulgowe  i normalne dla czasowej
+                sql4 = f"INSERT INTO cena_wystawa(cenaID, wystawaID) VALUES (1, {result}), (3,  {result});"
+            cursor.execute(sql4)
+
             connection.commit()
             w = 1
     except Exception as błąd:
@@ -108,7 +120,7 @@ def sprawdz_ceny(nazwa_wystawy):
                 f"SELECT DISTINCT wystawa.nazwa, cena.typ, cena.koszt "
                 f"FROM wystawa JOIN cena_wystawa ON wystawa.wystawaID = cena_wystawa.wystawaID "
                 f"JOIN cena ON cena.cenaID = cena_wystawa.cenaID "
-                f"WHERE wystawy.nazwa = '{nazwa_wystawy}';"
+                f"WHERE wystawa.nazwa = '{nazwa_wystawy}';"
             )
             cursor.execute(sql)
             result = cursor.fetchall()
