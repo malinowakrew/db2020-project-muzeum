@@ -52,7 +52,7 @@ def najczesciej_odwiedzane_wystawy(wybor, dzis):
         raise Exception("Błąd bazy")
 
 
-def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, salaID):
+def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, salaID, vip):
     connection = polaczenie()
     try:
         with connection.cursor() as cursor:
@@ -76,14 +76,13 @@ def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, salaID):
             sql2 = f"INSERT INTO wystawa_sala(salaID, wystawaID) VALUES ({salaID}, {result});"
             cursor.execute(sql2)
 
-            koniec = datetime.datetime(9999, 12, 31)
-            koniecCmp = koniec.strftime('%Y-%m-%d')
-            if zakonczenie == koniecCmp:
-                # 1 i 3  to  ulgowe  i normalne dla stalej
-                sql4 = f"INSERT INTO cena_wystawa(cenaID, wystawaID) VALUES (1, {result}), (2,  {result});"
+
+            if (vip == "tak"):
+                # 3 i 4 to vip
+                sql4 = f"INSERT INTO cena_wystawa(cenaID, wystawaID) VALUES (1, {result}), (2,  {result}), (3, {result}), (4,  {result});"
             else:
-                # 1 i 2  to  ulgowe  i normalne dla czasowej
-                sql4 = f"INSERT INTO cena_wystawa(cenaID, wystawaID) VALUES (1, {result}), (3,  {result});"
+                # 1 i 2  to  tylko zwykle
+                sql4 = f"INSERT INTO cena_wystawa(cenaID, wystawaID) VALUES (1, {result}), (2,  {result});"
             cursor.execute(sql4)
 
             connection.commit()
@@ -95,14 +94,14 @@ def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, salaID):
         connection.close()
         return w
 
-def dodaj_bilet(cena, data, wartosc, wystawa,  nazwa):
+def dodaj_bilet(cena, data,wystawa,  nazwa):
     try:
         connection = polaczenie()
         with connection.cursor() as cursor:
             # dodajemy do tablicy Bilet
             sql = (
-                f"INSERT INTO bilet (cena, data_zakupu, zakupiony, wystawaID, nazwa_uzytkownika) " 
-                f" VALUES({cena}, '{data}' ,{wartosc}, (SELECT wystawaID FROM wystawa WHERE nazwa = '{wystawa}') , '{nazwa}' );"
+                f"INSERT INTO bilet (cena, data_zakupu, wystawaID, nazwa_uzytkownika) " 
+                f" VALUES({cena}, '{data}' , (SELECT wystawaID FROM wystawa WHERE nazwa = '{wystawa}') , '{nazwa}' );"
             )
             cursor.execute(sql)
             connection.commit()
@@ -128,6 +127,44 @@ def sprawdz_ceny(nazwa_wystawy):
         return result
     except Exception as bład:
         raise Exception(bład)
+
+
+def sprawdz_bilety():
+    try:
+        connection = polaczenie()
+        with connection.cursor() as cursor:
+            dzisiejsza_data = datetime.datetime.now()
+            dzis = dzisiejsza_data.strftime("%Y-%m-%d")
+
+            # wykonujemy zapytanie do bazy i wyświetlamy
+            sql = f"SELECT bilet.data_zakupu, wystawa.nazwa " \
+                  f"FROM wystawa JOIN bilet ON wystawa.wystawaID = bilet.wystawaID " \
+                  f"WHERE wystawa.koniec > DATE '{dzis}';"
+
+            cursor.execute(sql)
+            result = cursor.fetchall()
+
+        connection.close()
+        return result
+    except:
+        raise Exception("Błąd bazy")
+
+def usun_bilet(nazwa,data,uzytkownik):
+    try:
+        connection = polaczenie()
+        with connection.cursor() as cursor:
+            # dodajemy do tablicy Bilet
+            sql = (
+                f"DELETE bilet FROM bilet INNER JOIN wystawa on wystawa.wystawaID=bilet.wystawaID "
+                f"WHERE bilet.data_zakupu='{data}' AND wystawa.nazwa='{nazwa}' AND nazwa_uzytkownika='{uzytkownik}';"
+            )
+            cursor.execute(sql)
+            connection.commit()
+            connection.close()
+        return 1
+    except:
+        raise Exception("Błąd bazy")
+
 
 
 
