@@ -1,18 +1,6 @@
 import os
 import pymysql
-#from . import polaczenie
-def polaczenie():
-    connection = pymysql.connect(
-        host='localhost',
-        # user=os.getenv("DB_USERNAME"),
-        user="admin",
-        # password=os.getenv("DB_PASSWORD"),
-        password="123",
-        database="muzeum",
-        charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    return connection
+from . import polaczenie
 import pandas as pd
 
 def pokaz_dostepne_sale(budynekID, poczatek, koniec):
@@ -99,10 +87,3 @@ def wielkosc_wystawy(dzis):
     except Exception as błąd:
         raise Exception(błąd)
 
-
-def main():
-    wielkosc_wystawy("12")
-
-
-if __name__ == "__main__":
-    main()

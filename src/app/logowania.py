@@ -3,6 +3,7 @@ import sql.wystawy as zapytania_wystawy
 import sql.logowania as zapytania_logowania
 import sql.sale as zapytania_sale
 import sql.eksponaty as zapytania_eksponaty
+
 ## do innych app
 import app.wystawy as wystawy_app
 import app.eksponaty as eksponaty_app
@@ -204,15 +205,17 @@ class Pracownik(Uzytkownik):
 
 
 def sciezka_uzytkownika():
+    wyloguj = True
     try:
         uzytkownik = Uzytkownik()
+        wyloguj = False
     except Exception as wiadomosc:
         if (str(wiadomosc) == "tuple index out of range"):
             print("Niepoprawne hasło")
         else:
             print(f"Tutaj przyda się programista bo {wiadomosc}")
 
-    wyloguj = False
+
 
     while (wyloguj == False):
         print(
