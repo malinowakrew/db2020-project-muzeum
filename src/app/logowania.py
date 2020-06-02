@@ -21,58 +21,65 @@ class Uzytkownik(wystawy_app.niezalogowany):
 
     def Kup_bilet(self):
         try:
-            wystawa = input("\nPodaj nazwę wystawy:")
+            print("Aktywne wystawy:")
+            aktywne = zapytania_wystawy.wyszukiwarka_aktywnych_wystaw(self.dzis)
+            for iter, wystawa in enumerate(aktywne):
+                print(f"{iter + 1}. {wystawa['nazwa']} \t otwarta do {wystawa['koniec']}")
+            numer = int(input("\nWybierz wystawę:"))
+            for iter2, wystawa2 in enumerate(aktywne):
+                if iter2 + 1 == numer+1:
+                    break
+                nazwa = wystawa2['nazwa']
             dzisiejsza_data = datetime.datetime.now()
             dzis = dzisiejsza_data.strftime("%Y-%m-%d")
 
-            #znizka=int(input("1.Bilet ulgowy 10 złoty\n2.Bilet normalny 20zł\nWybierz bilet: "))
-
-            ceny=zapytania_wystawy.sprawdz_ceny(wystawa)
+            ceny=zapytania_wystawy.sprawdz_ceny(nazwa)
             for iter, cena in enumerate(ceny):
                 print(f"{iter + 1}. {cena['typ']} \t  {cena['koszt']} zł")
             znizka = int(input ("Wybierz bilet: "))
 
-            if znizka == 1:
-                for iter2, cena2 in enumerate(ceny):
-                    if iter2 + 1 == 2:
-                        break
-                    koszt = cena2['koszt']
+            for iter2, cena2 in enumerate(ceny):
+                if iter2 + 1 == znizka+1:
+                    break
+                koszt = cena2['koszt']
 
-                wybor = input(
-                    f"Cena biletu wynosi {koszt} zł. Czy kontynuować z transakcją? (tak/nie)\n")
-                wybor = wybor.lower()
-                if (wybor == "tak"):
-                    # dodanie biletu do bazy danych
-                    result = zapytania_wystawy.dodaj_bilet(koszt, dzis, 1, wystawa,  self.nazwa)
-                    if result:
-                        print("Bilet kupiony pomyślnie.")
-            elif znizka == 2:
-                for iter2, cena2 in enumerate(ceny):
-                    if iter2 + 1 == 3:
-                        break
-                    koszt = cena2['koszt']
-
-                wybor = input(
-                    f"Cena biletu wynosi {koszt} zł. Czy kontynuować z transakcją? (tak/nie)\n")
-                wybor = wybor.lower()
-                if (wybor == "tak"):
-                    # dodanie biletu do bazy danych
-                    result = zapytania_wystawy.dodaj_bilet(koszt, dzis, 1, wystawa, self.nazwa)
-                    if result:
-                        print("Bilet kupiony pomyślnie.")
-            elif znizka == 3:
-                koszt=cena['koszt'] #=3
-                wybor = input(
-                    f"Cena biletu wynosi {koszt} zł. Czy kontynuować z transakcją? (tak/nie)\n")
-                wybor = wybor.lower()
-                if (wybor == "tak"):
-                    # dodanie biletu do bazy danych
-                    result = zapytania_wystawy.dodaj_bilet(koszt, dzis, 1, wystawa, self.nazwa)
-                    if result:
-                        print("Bilet kupiony pomyślnie.")
+            wybor = input(
+                f"Cena biletu wynosi {koszt} zł. Czy kontynuować z transakcją? (tak/nie)\n")
+            wybor = wybor.lower()
+            if (wybor == "tak"):
+                # dodanie biletu do bazy danych
+                result = zapytania_wystawy.dodaj_bilet(koszt, dzis, nazwa, self.nazwa)
+                if result:
+                    print("Bilet kupiony pomyślnie.")
 
             else:
                 print("Błąd")
+
+        except Exception as wiadomosc:
+            if wiadomosc == "Błąd bazy":
+                print("Niestety baza nie może Cię obsłużyć. To jej wina")
+            else:
+                print(wiadomosc)
+            return 0
+        finally:
+            return 1
+
+    def Zwrot_biletu(self):
+        try:
+            print("\nKupione bilety na bieżące wystawy:")
+            bilety=zapytania_wystawy.sprawdz_bilety()
+            for iter, bilet in enumerate(bilety):
+                print(f"{iter + 1}. {bilet['nazwa']}, data zakupu: {bilet['data_zakupu']}")
+            numer = int(input("Wybierz bilet: "))
+            for iter2, bilet2 in enumerate(bilety):
+                if iter2 + 1 == numer+1:
+                    break
+                nazwa = bilet2['nazwa']
+                data=bilet2['data_zakupu']
+            result= zapytania_wystawy.usun_bilet(nazwa,data,self.nazwa)
+            if result:
+                print("Bilet zwrócony pomyślnie.")
+
 
         except Exception as wiadomosc:
             if wiadomosc == "Błąd bazy":
@@ -127,42 +134,36 @@ class Pracownik(Uzytkownik):
     def dodaj_wystawe(self):
         try:
             nazwa = input("Podaj nazwę wystawy: ")
-            rodzaj= input("Czy jest wystawa czasowa? (tak/nie): ")
             startR = input("Będzie trwać od: \nRok:")
             startM = input("Miesiąc:")
             startD = input("Dzień:")
             start = datetime.datetime(int(startR), int(startM), int(startD))
+            koniecR = input("Kończy się: \nRok:")
+            koniecM = input("Miesiąc:")
+            koniecD = input("Dzień:")
+            koniec = datetime.datetime(int(koniecR), int(koniecM), int(koniecD))
             poczatek = start.strftime('%Y-%m-%d')
-            if rodzaj == 'tak':
-                koniecR = input("Kończy się: \nRok:")
-                koniecM = input("Miesiąc:")
-                koniecD = input("Dzień:")
-                koniec = datetime.datetime(int(koniecR), int(koniecM), int(koniecD))
-                zakonczenie = koniec.strftime('%Y-%m-%d')
-                print(f"Wybrany termin: {poczatek} do {zakonczenie}")
-            else:
-                koniec = datetime.datetime(9999,12,31)
-                zakonczenie = koniec.strftime('%Y-%m-%d')
-                print(f"Wybrany termin: Od {poczatek}")
+            zakonczenie = koniec.strftime('%Y-%m-%d')
+            print(f"Wybrany termin {poczatek} i {zakonczenie}")
             print('Wolne sale w twoim budynku: ')
+
             sale = zapytania_sale.pokaz_dostepne_sale(self.budynekID, poczatek, zakonczenie)
             if len(sale) != 0:
                 for iter, sala in enumerate(sale):
                     print(f"{iter + 1}. Sala nr {sala['numer']}")
 
                 sala_w = int(input("Podaj numer sali: "))
-                if rodzaj == 'tak':
-                    wybor = input(f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek} do {zakonczenie}\n\t Sala nr {(sale[sala_w - 1])['salaID']}\n")
-                else:
-                    wybor = input(f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek}1\n\t Sala nr {(sale[sala_w - 1])['salaID']}\n")
+                vip = input("Czy będą dostępne bilety VIP? (tak/nie)")
+                wybor = input(
+                    f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek} do {zakonczenie}\n\t Sala nr {(sale[sala_w - 1])['salaID']}\n"
+                    f"\t Dostępne bilety VIP: {vip}\n")
+
                 wybor = wybor.lower()
 
                 if (wybor == "tak"):
                     # dodanie wystawy do bazy danych
                     result = zapytania_wystawy.dodaj_wystawe(nazwa, poczatek, zakonczenie, self.pracownikID,
-                                                             (sale[sala_w - 1])["salaID"])
-                    # przypisanie ID wystawy do odpowiadajacej jej sali
-                    # result2 = zapytania_sale.dodaj_wystawe(nazwa, sala, self.budynekID)
+                                                             (sale[sala_w - 1])["salaID"], vip)
 
                 if result == 1:
                     print("Wystawa dodana")
@@ -250,7 +251,8 @@ def sciezka_uzytkownika():
               "1. Sprawdź aktualne wystawy \n"
               "2. Sprawdź popularne wystawy \n"
               "3. Kup bilet \n"
-              "4. Wyloguj")
+              "4. Zwróć bilet \n"
+              "5. Wyloguj")
         funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
         niezalogowany = wystawy_app.niezalogowany()
 
@@ -263,10 +265,13 @@ def sciezka_uzytkownika():
             niezalogowany.najczesciej_odwiedzane_wystawy()
 
         elif (funkcjonalnosc == "3"):
-            niezalogowany.wyszukiwarka_aktywnych_wystaw()
+            #niezalogowany.wyszukiwarka_aktywnych_wystaw()
             uzytkownik.Kup_bilet()
 
         elif (funkcjonalnosc == "4"):
+            uzytkownik.Zwrot_biletu()
+
+        elif (funkcjonalnosc == "5"):
             print("Wylogowano \n\n")
             wyloguj = True
         else:
