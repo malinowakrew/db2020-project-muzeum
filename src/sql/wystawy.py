@@ -52,7 +52,7 @@ def najczesciej_odwiedzane_wystawy(wybor, dzis):
         raise Exception("Błąd bazy")
 
 
-def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, salaID, vip):
+def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, lista_sal, budynekID, vip):
     connection = polaczenie()
     try:
         with connection.cursor() as cursor:
@@ -66,15 +66,24 @@ def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, salaID, vip):
             )
             cursor.execute(sql)
 
-            sql3 = (
+            sql2 = (
                 f"SELECT wystawa.wystawaID FROM wystawa WHERE wystawa.nazwa = '{nazwa}';"
             )
 
-            cursor.execute(sql3)
+            cursor.execute(sql2)
             result = ((cursor.fetchall())[0])["wystawaID"]
 
-            sql2 = f"INSERT INTO wystawa_sala(salaID, wystawaID) VALUES ({salaID}, {result});"
-            cursor.execute(sql2)
+            for sala_numer in lista_sal:
+                sql3 =  (
+                    f"SELECT sala.salaID FROM sala WHERE sala.numer = {sala_numer} AND sala.budynekID = {budynekID};"
+                )
+                cursor.execute(sql3)
+                salaID = ((cursor.fetchall())[0])['salaID']
+                print(f"salaID {salaID}")
+                sql3_1 = (
+                    f"INSERT INTO wystawa_sala(salaID, wystawaID) VALUES ({salaID}, {result});"
+                )
+                cursor.execute(sql3_1)
 
 
             if (vip == "tak"):

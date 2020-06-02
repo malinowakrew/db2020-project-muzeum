@@ -104,7 +104,7 @@ class Uzytkownik(wystawy_app.niezalogowany):
                 return dane[0]
             except Exception as wiadomosc:
                 raise Exception(wiadomosc)
-
+            #KOD DO USUNIĘCIA
                 if (log < 4):
                     ponownie = (input("Czy chcesz spróbować ponownie? Napisz 'tak' jeśli chcesz.")).lower()
 
@@ -153,10 +153,16 @@ class Pracownik(Uzytkownik):
                 for iter, sala in enumerate(sale):
                     print(f"{iter + 1}. Sala nr {sala['numer']}")
 
-                sala_w = int(input("Podaj numer sali: "))
+                wybor_sal = input("Aby wybrać więcej niż 1 salę wpisz je po przecinku nie dawaj spacji pomiędzy nie\n"
+                                   "Podaj numer sali: ")
+                try:
+                    lista_sal = [int(numer) for numer in wybor_sal.split(",")]
+                except:
+                    raise Exception("Błądnie wpisane numery sal")
+
                 vip = input("Czy będą dostępne bilety VIP? (tak/nie)")
                 wybor = input(
-                    f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek} do {zakonczenie}\n\t Sala nr {(sale[sala_w - 1])['salaID']}\n"
+                    f"Czy dane są poprawne? \n\t {nazwa} \n\t Od {poczatek} do {zakonczenie}\n\t Sala nr {lista_sal}\n"
                     f"\t Dostępne bilety VIP: {vip}\n")
 
                 wybor = wybor.lower()
@@ -164,11 +170,13 @@ class Pracownik(Uzytkownik):
                 if (wybor == "tak"):
                     # dodanie wystawy do bazy danych
                     result = zapytania_wystawy.dodaj_wystawe(nazwa, poczatek, zakonczenie, self.pracownikID,
-                                                             (sale[sala_w - 1])["salaID"], vip)
+                                                             lista_sal, self.budynekID, vip)
 
                 if result == 1:
                     print("Wystawa dodana")
                     return 1
+                else:
+                    raise Exception("Nie mogę dodać do bazy")
 
             else:
                 print("Brak wolnych sal w wybranym terminie")
@@ -250,6 +258,11 @@ class Pracownik(Uzytkownik):
         except Exception as błąd:
             print(błąd)
 
+    def dodaj_autora(self):
+        print("Uzupełnij dane autora")
+        imie = input("Imie:")
+
+
 
 
 
@@ -318,7 +331,8 @@ def sciezka_pracownika():
         print("\n1. Dodaj wystawę\n"
               "2. Dodaj eksponat\n"
               "3. Pokaż statystyki zwiedzania\n"
-              "4. Wyloguj")
+              "4. Dodaj autora\n"
+              "5. Wyloguj")
         funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
 
         if (funkcjonalnosc == "1"):
@@ -332,7 +346,11 @@ def sciezka_pracownika():
             print("\n \t ################### \n")
             pracownik.statystyki()
 
-        elif (funkcjonalnosc == "4"):
+        elif(funkcjonalnosc == "4"):
+            print("\n \t ################### \n")
+            pracownik.dodaj_autora()
+
+        elif (funkcjonalnosc == "5"):
             print("Wylogowano \n\n")
             wyloguj = True
         else:
@@ -375,3 +393,4 @@ def rejestracja():
         return 0
     finally:
         return 1
+
