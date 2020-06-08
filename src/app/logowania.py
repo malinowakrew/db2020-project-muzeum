@@ -3,6 +3,7 @@ import sql.wystawy as zapytania_wystawy
 import sql.logowania as zapytania_logowania
 import sql.sale as zapytania_sale
 import sql.eksponaty as zapytania_eksponaty
+import sql.autor as zapytania_autor
 
 ## do innych app
 import app.wystawy as wystawy_app
@@ -208,28 +209,39 @@ class Pracownik(Uzytkownik):
                 wielkosc = wielkosc.fillna(0.0)
 
                 dostepne_wystawy = wielkosc[wielkosc["wielkosc_wystawy"] > wielkosc["ilosc_eksponatow"]]
+                dostepne_wystawy = dostepne_wystawy.set_index('nazwa')
                 print(dostepne_wystawy)
                 wybor = 1
 
                 while(wybor != '0'):
-                    wybor = int(input(f"Wybierz wystawę do której chcesz dodać eksponat: \n"
-                                  f"jeśli chcesz zrezygnować z dodania wpisz 0 \n"))
+                    wybor = input(f"Wybierz wystawę do której chcesz dodać eksponat: \n"
+                                  f"jeśli chcesz zrezygnować z dodania wpisz 0 \n")
 
 
                     if (wybor in dostepne_wystawy.index):
-                        nazwa_wybranej_wystawy = dostepne_wystawy.iloc[wybor-1, 1]
+                        nazwa_wybranej_wystawy = wybor
 
                         print(f"Wybrałeś wystawę {nazwa_wybranej_wystawy}")
                         result = zapytania_eksponaty.dodaj_eksponat(nazwa, poczatek, opis, nazwa_wybranej_wystawy)
 
                         if (result == 1):
                             print("\n Dodano eksponat do wystawy \n")
-                            return 1
+                            break
 
                     elif wybor == '0':
                         return 0
                     else:
                         print("\n Podano złą nazwę wystawy \n")
+
+                autor = input("Podaj imię, nazwisko oraz pseudonim autora oddzielone spacją: ")
+
+                autor = autor.split(" ")
+
+                res_autor = zapytania_autor.dodaj_autora_do_eksponatu(nazwa, poczatek, opis, autor[0], autor[1], autor[2])
+
+                if  res_autor == 1:
+                    print("Dodano autora")
+
             else:
                 print("\n Zrezygnowano z dodania \n")
 
@@ -260,7 +272,15 @@ class Pracownik(Uzytkownik):
 
     def dodaj_autora(self):
         print("Uzupełnij dane autora")
-        imie = input("Imie:")
+
+        autor = input("Podaj imię, nazwisko oraz pseudonim autora oddzielone spacją: ")
+        autor = autor.split(" ")
+
+        try:
+            zapytania_autor.dodaj_autora(autor[0], autor[1], autor[2])
+            print("Dodano autora")
+        except Exception as błąd:
+            print(błąd)
 
 
 
