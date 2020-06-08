@@ -3,6 +3,7 @@ import sql.wystawy as zapytania_wystawy
 import sql.logowania as zapytania_logowania
 import sql.sale as zapytania_sale
 import sql.eksponaty as zapytania_eksponaty
+import sql.autor as zapytania_autor
 
 ## do innych app
 import app.wystawy as wystawy_app
@@ -90,6 +91,29 @@ class Uzytkownik(wystawy_app.niezalogowany):
             return 0
         finally:
             return 1
+
+    def Szukaj_autora(self):
+        try:
+            numer = int(input("\nSzukaj po:\n1.Nazwisko\n2.Imie\n3.Pseudonim\n"))
+            nazwa=input("Wpisz tutaj: ")
+            if numer==1:
+                typ='nazwisko'
+            elif numer==2:
+                typ='imie'
+            elif numer==3:
+                typ='pseudonim'
+            result = zapytania_autor.szukaj_autora(typ, nazwa)
+            print(f"Szukaj wystawy po - {nazwa}:")
+            for iter, autor in enumerate(result):
+                print(f"{iter + 1}. {autor['nazwa']} ")
+
+
+        except Exception as wiadomosc:
+            if wiadomosc == "Błąd bazy":
+                print("Niestety baza nie może Cię obsłużyć. To jej wina")
+            else:
+                print(wiadomosc)
+            return 0
 
     def logowanie(self):
         print("Oto nasz panel logowania")
@@ -263,8 +287,17 @@ class Pracownik(Uzytkownik):
         imie = input("Imie:")
 
 
-
-
+    def dziela_autorow(self):
+        try:
+            result=zapytania_autor.dziela_autorow()
+            for iter, autor in enumerate(result):
+                print(f"{iter + 1}. {autor['nazwisko']} {autor['imie']} - liczba eksponatów w muzeum: {autor['ilosc']}")
+        except Exception as wiadomosc:
+            if wiadomosc == "Błąd bazy":
+                print("Niestety baza nie może Cię obsłużyć. To jej wina")
+            else:
+                print(wiadomosc)
+            return 0
 
 
 
@@ -288,7 +321,8 @@ def sciezka_uzytkownika():
               "2. Sprawdź popularne wystawy \n"
               "3. Kup bilet \n"
               "4. Zwróć bilet \n"
-              "5. Wyloguj")
+              "5. Szukaj wystawy po autorze \n"              
+              "6. Wyloguj")
         funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
         niezalogowany = wystawy_app.niezalogowany()
 
@@ -308,6 +342,9 @@ def sciezka_uzytkownika():
             uzytkownik.Zwrot_biletu()
 
         elif (funkcjonalnosc == "5"):
+            uzytkownik.Szukaj_autora()
+
+        elif (funkcjonalnosc == "6"):
             print("Wylogowano \n\n")
             wyloguj = True
         else:
@@ -332,7 +369,8 @@ def sciezka_pracownika():
               "2. Dodaj eksponat\n"
               "3. Pokaż statystyki zwiedzania\n"
               "4. Dodaj autora\n"
-              "5. Wyloguj")
+              "5. Zbadaj autorów\n"              
+              "6. Wyloguj")
         funkcjonalnosc = input("Podaj numer, który Cię interesuje: ")
 
         if (funkcjonalnosc == "1"):
@@ -351,6 +389,10 @@ def sciezka_pracownika():
             pracownik.dodaj_autora()
 
         elif (funkcjonalnosc == "5"):
+            print("\n \t ################### \n")
+            pracownik.dziela_autorow()
+
+        elif (funkcjonalnosc == "6"):
             print("Wylogowano \n\n")
             wyloguj = True
         else:
