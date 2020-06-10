@@ -95,6 +95,15 @@ JOIN cena ON cena.cenaID = cena_wystawa.cenaID
 WHERE wystawa.nazwa = '{nazwa_wystawy}';
 ```
 
+5. Sprawdzenie na jakich wystawach występują dzieła autorów
+```sql
+SELECT autor.{typ}, wystawa.nazwa FROM autor 
+JOIN eksponat_autor ON autor.autorID = eksponat_autor.autorID 
+JOIN eksponat ON eksponat.eksponatID = eksponat_autor.eksponatID               
+JOIN wystawa ON eksponat.wystawaID = wystawa.wystawaID 
+WHERE autor.{typ}='{nazwa}';
+```
+
 ### Pracownik
 
 1. Sprawdzanie maksymalnej ilości miejsca w salach należących do wystawy
@@ -144,9 +153,13 @@ FROM pracownik
 JOIN uzytkownik ON pracownik.nazwa = uzytkownik.nazwa 
 WHERE uzytkownik.nazwa = '{login}';
 ```
+6. Sprawdzanie autorów, którzy mają najwięcej dzieł na wystawach w muzeum (także w przeszłości) oraz wyświetlenie ich liczby.
+```sql
+SELECT autor.nazwisko, autor.imie, COUNT(eksponat_autor.eksponatID) 
+AS ilosc FROM autor JOIN eksponat_autor ON autor.autorID = eksponat_autor.autorID 
+GROUP BY autor.autorID ORDER BY autor.nazwisko LIMIT 5;
+```
 
-2. Dodaj wystawę
-3. Dodaj eksponat
-4. Pokaż statystyki zwiedzania
-5. Dodaj autora
+## Aplikacja
 
+## Dodatkowe uwagi
