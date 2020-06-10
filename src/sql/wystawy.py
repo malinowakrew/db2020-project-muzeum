@@ -79,7 +79,7 @@ def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, lista_sal, budynekID,
                 )
                 cursor.execute(sql3)
                 salaID = ((cursor.fetchall())[0])['salaID']
-                print(f"salaID {salaID}")
+
                 sql3_1 = (
                     f"INSERT INTO wystawa_sala(salaID, wystawaID) VALUES ({salaID}, {result});"
                 )
@@ -93,9 +93,9 @@ def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, lista_sal, budynekID,
                 # 1 i 2  to  tylko zwykle
                 sql4 = f"INSERT INTO cena_wystawa(cenaID, wystawaID) VALUES (1, {result}), (2,  {result});"
             cursor.execute(sql4)
-
             connection.commit()
             w = 1
+
     except Exception as błąd:
         w = 0
         connection.rollback()

@@ -17,7 +17,3 @@ def dodaj_eksponat(nazwa, poczatek, opis, wystawa_nazwa):
     except Exception as błąd:
         raise Exception(błąd)
 
-
-def pokaz_eksponat_z_wystawy():
-    pass
-

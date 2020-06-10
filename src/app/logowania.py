@@ -216,9 +216,11 @@ class Pracownik(Uzytkownik):
                 wybor = wybor.lower()
 
                 if (wybor == "tak"):
-                    # dodanie wystawy do bazy danych
-                    result = zapytania_wystawy.dodaj_wystawe(nazwa, poczatek, zakonczenie, self.pracownikID,
-                                                             lista_sal, self.budynekID, vip)
+                    try:
+                        result = zapytania_wystawy.dodaj_wystawe(nazwa, poczatek, zakonczenie, self.pracownikID,
+                                                                lista_sal, self.budynekID, vip)
+                    except Exception as błąd:
+                        print(f"Programiście powiedz: {błąd}")
 
                 if result == 1:
                     print("Wystawa dodana")
