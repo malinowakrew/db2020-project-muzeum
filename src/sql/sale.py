@@ -49,19 +49,10 @@ def dodaj_wystawe(wystawa, sala, budynek):
         raise Exception(błąd)
 
 
-def wielkosc_wystawy(dzis):
+def wielkosc_wystawy():
     try:
         connection = polaczenie()
         with connection.cursor() as cursor:
-            sql = (
-                f"SELECT COUNT(eksponat.eksponatID) as ilosc_eksponatow, SUM(sala.wielkosc) as wielkosc, wystawa.nazwa, wystawa.wystawaID "
-                f"FROM eksponat JOIN wystawa ON wystawa.wystawaID = eksponat.wystawaID "
-                f"INNER JOIN wystawa_sala ON wystawa_sala.wystawaID = wystawa.wystawaID"
-                f"JOIN sala ON sala.salaID = wystawa_sala.salaID "
-                f"WHERE wystawa.koniec < DATE '{dzis}'"
-                f"GROUP BY wystawa.wystawaID"
-            )
-
             sql2 = (
                 f"SELECT COUNT(eksponat.eksponatID) as ilosc_eksponatow, wystawa.nazwa FROM eksponat "
                 f"LEFT JOIN wystawa ON wystawa.wystawaID = eksponat.wystawaID GROUP BY wystawa.wystawaID;"
