@@ -69,7 +69,7 @@ class Uzytkownik(wystawy_app.niezalogowany):
     def Zwrot_biletu(self):
         try:
             print("\nKupione bilety na bieżące wystawy:")
-            bilety=zapytania_wystawy.sprawdz_bilety()
+            bilety=zapytania_wystawy.sprawdz_bilety(self.nazwa)
             for iter, bilet in enumerate(bilety):
                 print(f"{iter + 1}. {bilet['nazwa']}, data zakupu: {bilet['data_zakupu']}")
             numer = int(input("Wybierz bilet: "))
@@ -443,12 +443,13 @@ def rejestracja():
     try:
         mail = input("Podaj email: ")
         res1 = zapytania_logowania.powtorzenie("email",mail)
-        boolean = search(".@gmail.com$", res1[0]["email"])
+        #comment bo nie dziala ?
+        #boolean = search(".@gmail.com$", res1[0]["email"])
         if len(res1) == 1:
             print("Ten email ma już przypisane konto.")
             return 0
-        elif boolean != True:
-                raise ValueError("Nieprawidłowa forma emaila")
+        #elif boolean != True:
+         #       raise ValueError("Nieprawidłowa forma emaila")
         else:
             nazwa = input("Podaj nazwę użytkownika: ")
             res2 = zapytania_logowania.powtorzenie("nazwa",nazwa)

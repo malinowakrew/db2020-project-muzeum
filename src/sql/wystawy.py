@@ -139,7 +139,7 @@ def sprawdz_ceny(nazwa_wystawy):
         raise Exception(bład)
 
 
-def sprawdz_bilety():
+def sprawdz_bilety(uzytkownik):
     try:
         connection = polaczenie()
         with connection.cursor() as cursor:
@@ -149,7 +149,7 @@ def sprawdz_bilety():
             # wykonujemy zapytanie do bazy i wyświetlamy
             sql = f"SELECT bilet.data_zakupu, wystawa.nazwa " \
                   f"FROM wystawa JOIN bilet ON wystawa.wystawaID = bilet.wystawaID " \
-                  f"WHERE wystawa.koniec > DATE '{dzis}';"
+                  f"WHERE wystawa.koniec > DATE '{dzis}' AND nazwa_uzytkownika='{uzytkownik}';"
 
             cursor.execute(sql)
             result = cursor.fetchall()
