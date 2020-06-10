@@ -66,12 +66,12 @@ FROM uzytkownik
 WHERE uzytkownik.nazwa = '{login}' AND uzytkownik.haslo = '{haslo}';
 ```
 
-5. Pokazanie aktywnych wystaw (w dniu logowania)
+2. Pokazanie aktywnych wystaw (w dniu logowania)
 ```sql
 SELECT nazwa, koniec FROM wystawa WHERE koniec > DATE '{dzis}' AND poczatek < DATE '{dzis}';
 ```
 
-6. Pokazanie rankingu wystaw (popularność jest liczona ilością kupionych biletów na daną wystawę).
+3. Pokazanie rankingu wystaw (popularność jest liczona ilością kupionych biletów na daną wystawę).
 
 a) wszystkie wystawy
 ```sql
@@ -87,7 +87,7 @@ WHERE DATE '{dzis}' BETWEEN wystawa.poczatek AND wystawa.koniec
 GROUP BY wystawa.wystawaID ORDER BY ilosc DESC LIMIT 5;
 ```
 
-7. Sprawdzenie ceny biletów na daną wystawę
+4. Sprawdzenie ceny biletów na daną wystawę
 ```sql
 SELECT DISTINCT wystawa.nazwa, cena.typ, cena.koszt 
 FROM wystawa JOIN cena_wystawa ON wystawa.wystawaID = cena_wystawa.wystawaID 
@@ -125,10 +125,25 @@ WHERE (budynek.budynekID = {budynekID} AND
 ( budynek.budynekID != {budynekID}));
 ```
 
+4. Sprawdzenie dokładnej ilości sprzedanych biletów
+```sql
+SELECT COUNT(bilet.biletID) as ilosc, wystawa.nazwa 
+FROM bilet 
+JOIN wystawa ON wystawa.wystawaID = bilet.wystawaID 
+JOIN pracownik ON pracownik.pracownikID = wystawa.pracownikID 
+JOIN budynek ON budynek.budynekID = pracownik.budynekID 
+WHERE budynek.budynekID = {budynekID} 
+GROUP BY wystawa.nazwa 
+ORDER BY ilosc;
+```
 
-1. Wyszukanie danych pracownika podczas logowania
-
-
+5. Wyszukanie danych pracownika podczas logowania
+```sql
+SELECT pracownik.imie, pracownik.nazwisko, pracownik.pracownikID, pracownik.budynekID 
+FROM pracownik 
+JOIN uzytkownik ON pracownik.nazwa = uzytkownik.nazwa 
+WHERE uzytkownik.nazwa = '{login}';
+```
 
 2. Dodaj wystawę
 3. Dodaj eksponat
