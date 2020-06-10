@@ -198,6 +198,23 @@ def statystyki(budynekID):
         raise Exception(błąd)
 
 
-
+def eksponaty_z_wystawy(nazwa):
+    try:
+        connection = polaczenie()
+        with connection.cursor() as cursor:
+            sql = (
+                f"SELECT eksponat.tytul, eksponat.rok_powstania, eksponat.opis, autor.imie, autor.nazwisko, autor.pseudonim "
+                f"FROM eksponat "
+                f"JOIN eksponat_autor ON eksponat_autor.eksponatID = eksponat.eksponatID "
+                f"JOIN autor ON autor.autorID = eksponat_autor.autorID "
+                f"LEFT JOIN wystawa ON eksponat.wystawaID = wystawa.wystawaID "
+                f"WHERE wystawa.nazwa = '{nazwa}';"
+            )
+            cursor.execute(sql)
+            result = cursor.fetchall()
+        connection.close()
+        return result
+    except Exception as błąd:
+        raise Exception(błąd)
 
 

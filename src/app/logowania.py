@@ -38,7 +38,7 @@ class Uzytkownik(wystawy_app.niezalogowany):
             ceny=zapytania_wystawy.sprawdz_ceny(nazwa)
             for iter, cena in enumerate(ceny):
                 print(f"{iter + 1}. {cena['typ']} \t  {cena['koszt']} zł")
-            znizka = int(input ("Wybierz bilet: "))
+            znizka = int(input("Wybierz bilet: "))
 
             for iter2, cena2 in enumerate(ceny):
                 if iter2 + 1 == znizka+1:
@@ -128,19 +128,43 @@ class Uzytkownik(wystawy_app.niezalogowany):
                 return dane[0]
             except Exception as wiadomosc:
                 raise Exception(wiadomosc)
-            #KOD DO USUNIĘCIA
-                if (log < 4):
-                    ponownie = (input("Czy chcesz spróbować ponownie? Napisz 'tak' jeśli chcesz.")).lower()
 
-                    if (ponownie == "tak"):
-                        log += 1
-                        print(f"Próba numer {log}")
-                    else:
-                        raise Exception("Niezgodność danych")
-                        return 0
-                else:
-                    raise Exception("Za dużo prób")
+    def sprawdz_wystawy(self):
+        self.wyszukiwarka_aktywnych_wystaw()
 
+        powrot = False
+        while powrot == False:
+
+            wybor = (input("Czy chcesz zobaczyć eksponaty z wystawy? tak/nie ")).lower()
+
+            if wybor == "tak":
+                nazwa = input("Wpisz nazwę wystawy, którą chcesz lepiej poznać ")
+
+                try:
+                    eksponaty = zapytania_wystawy.eksponaty_z_wystawy(nazwa)
+
+                except Exception as błąd:
+                    print("Wprowadzono niepoprawne dane")
+                    print(błąd)
+                    break
+
+                if len(eksponaty) == 0:
+                    print("Wystawa musi być pusta! Ups coś poszło nie tak")
+
+                for eksponat in eksponaty:
+                    print(f"\n {eksponat['tytul']}")
+                    print(f"Data powstania: {eksponat['rok_powstania']}")
+                    print(f"Dane o autorze: {eksponat['imie']} {eksponat['nazwisko']} pseudonim {eksponat['pseudonim']}")
+
+                    opis = (str(eksponat['opis']))[2:-1]
+
+                    print(f"Opis: {opis}")
+
+                print("\n\tJeszcze raz?")
+            elif wybor == "nie":
+                powrot = True
+            else:
+                print("Niepoprawnie wpisana wartość")
 
 
 
@@ -335,7 +359,7 @@ def sciezka_uzytkownika():
 
     while (wyloguj == False):
         print(
-              "Witamy, możesz korzystać z naszej bazy. \n"
+              "\n\nWitamy, możesz korzystać z naszej bazy. \n"
               "1. Sprawdź aktualne wystawy \n"
               "2. Sprawdź popularne wystawy \n"
               "3. Kup bilet \n"
@@ -346,15 +370,12 @@ def sciezka_uzytkownika():
         niezalogowany = wystawy_app.niezalogowany()
 
         if (funkcjonalnosc == "1"):
-            dzis = datetime.datetime.now()
-            niezalogowany.wyszukiwarka_aktywnych_wystaw()
-            zmienna =  0
+            uzytkownik.sprawdz_wystawy()
 
         elif (funkcjonalnosc == "2"):
             niezalogowany.najczesciej_odwiedzane_wystawy()
 
         elif (funkcjonalnosc == "3"):
-            #niezalogowany.wyszukiwarka_aktywnych_wystaw()
             uzytkownik.Kup_bilet()
 
         elif (funkcjonalnosc == "4"):
@@ -399,6 +420,7 @@ def sciezka_pracownika():
         elif (funkcjonalnosc == "2"):
             print("\n \t ################### \n")
             pracownik.dodaj_eksponat()
+
         elif (funkcjonalnosc == "3"):
             print("\n \t ################### \n")
             pracownik.statystyki()
