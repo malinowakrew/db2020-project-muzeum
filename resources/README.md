@@ -67,7 +67,7 @@ WHERE uzytkownik.nazwa = '{login}' AND uzytkownik.haslo = '{haslo}';
 ```
 
 2. Sprawdzanie maksymalnej ilości miejsca w salach należących do wystawy
-``sql
+```sql
 SELECT SUM(sala.wielkosc) as wielkosc_wystawy, wystawa.nazwa FROM wystawa 
 LEFT JOIN wystawa_sala ON wystawa_sala.wystawaID = wystawa.wystawaID 
 LEFT JOIN sala ON sala.salaID = wystawa_sala.salaID 
@@ -100,6 +100,7 @@ SELECT nazwa, koniec FROM wystawa WHERE koniec > DATE '{dzis}' AND poczatek < DA
 ```
 
 6. Pokazanie rankingu wystaw (popularność jest liczona ilością kupionych biletów na daną wystawę).
+
 a) wszystkie wystawy
 ```sql
 SELECT wystawa.nazwa, wystawa.koniec, wystawa.poczatek, COUNT(bilet.biletID) 
