@@ -45,7 +45,7 @@ def dodaj_wystawe(wystawa, sala, budynek):
         raise Exception(błąd)
 
 
-def wielkosc_wystawy():
+def wielkosc_wystawy(cos):
     try:
         connection = polaczenie()
         with connection.cursor() as cursor:
