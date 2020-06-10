@@ -76,7 +76,7 @@ def dziela_autorow():
             sql = (
                 "SELECT autor.nazwisko, autor.imie, COUNT(eksponat_autor.eksponatID) "
                 "AS ilosc FROM autor JOIN eksponat_autor ON autor.autorID = eksponat_autor.autorID "
-                "GROUP BY autor.autorID ORDER BY autor.nazwisko LIMIT 5;"
+                "GROUP BY autor.autorID ORDER BY autor.nazwisko;"
                    )
             cursor.execute(sql)
             result = cursor.fetchall()
