@@ -98,6 +98,7 @@ def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, lista_sal, budynekID,
             w = 1
     except Exception as błąd:
         w = 0
+        connection.rollback()
         raise Exception(błąd)
     finally:
         connection.close()

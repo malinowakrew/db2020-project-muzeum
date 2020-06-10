@@ -54,7 +54,7 @@ def wielkosc_wystawy(dzis):
         connection = polaczenie()
         with connection.cursor() as cursor:
             sql = (
-                f"SELECT COUNT(eksponat.eksponatID) as ilosc_eksponatow, SUM(sala.wielkosc) as wielkosc, wystawa.nazwa "
+                f"SELECT COUNT(eksponat.eksponatID) as ilosc_eksponatow, SUM(sala.wielkosc) as wielkosc, wystawa.nazwa, wystawa.wystawaID "
                 f"FROM eksponat JOIN wystawa ON wystawa.wystawaID = eksponat.wystawaID "
                 f"INNER JOIN wystawa_sala ON wystawa_sala.wystawaID = wystawa.wystawaID"
                 f"JOIN sala ON sala.salaID = wystawa_sala.salaID "
