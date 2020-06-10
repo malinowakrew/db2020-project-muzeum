@@ -104,6 +104,16 @@ JOIN wystawa ON eksponat.wystawaID = wystawa.wystawaID
 WHERE autor.{typ}='{nazwa}';
 ```
 
+6. Wyświetlanie informacji o eksponatach i ich autorach z danej wystawy
+```sql
+SELECT eksponat.tytul, eksponat.rok_powstania, eksponat.opis, autor.imie, autor.nazwisko, autor.pseudonim
+FROM eksponat 
+JOIN eksponat_autor ON eksponat_autor.eksponatID = eksponat.eksponatID 
+JOIN autor ON autor.autorID = eksponat_autor.autorID 
+LEFT JOIN wystawa ON eksponat.wystawaID = wystawa.wystawaID 
+WHERE wystawa.nazwa = '{nazwa}';
+```
+
 ### Pracownik
 
 1. Sprawdzanie maksymalnej ilości miejsca w salach należących do wystawy
