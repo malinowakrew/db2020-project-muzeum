@@ -66,34 +66,6 @@ FROM uzytkownik
 WHERE uzytkownik.nazwa = '{login}' AND uzytkownik.haslo = '{haslo}';
 ```
 
-2. Sprawdzanie maksymalnej ilości miejsca w salach należących do wystawy
-```sql
-SELECT SUM(sala.wielkosc) as wielkosc_wystawy, wystawa.nazwa FROM wystawa 
-LEFT JOIN wystawa_sala ON wystawa_sala.wystawaID = wystawa.wystawaID 
-LEFT JOIN sala ON sala.salaID = wystawa_sala.salaID 
-GROUP BY wystawa.wystawaID;
-```
-
-3. Sprawdzanie ilości dodanych eksponatów
-```sql
-SELECT COUNT(eksponat.eksponatID) as ilosc_eksponatow, wystawa.nazwa FROM eksponat 
-LEFT JOIN wystawa ON wystawa.wystawaID = eksponat.wystawaID GROUP BY wystawa.wystawaID;
-```
-
-4. Pokazanie dostępnych sal w czasie kiedy ma mieć miejsce dana wystawa
-```sql
-SELECT sala.numer, sala.wielkosc, sala.salaID FROM sala 
-WHERE sala.salaID NOT IN 
-( SELECT sala.salaID FROM budynek 
-INNER JOIN sala ON budynek.budynekID = sala.budynekID 
-LEFT JOIN wystawa_sala ON sala.salaID = wystawa_sala.salaID
-LEFT JOIN wystawa ON wystawa_sala.wystawaID = wystawa.wystawaID 
-WHERE (budynek.budynekID = {budynekID} AND 
-((DATE '{poczatek}' BETWEEN wystawa.poczatek AND wystawa.koniec) OR 
-(DATE '{koniec}' BETWEEN wystawa.poczatek AND wystawa.koniec))) OR 
-( budynek.budynekID != {budynekID}));
-```
-
 5. Pokazanie aktywnych wystaw (w dniu logowania)
 ```sql
 SELECT nazwa, koniec FROM wystawa WHERE koniec > DATE '{dzis}' AND poczatek < DATE '{dzis}';
@@ -124,6 +96,35 @@ WHERE wystawa.nazwa = '{nazwa_wystawy}';
 ```
 
 ### Pracownik
+
+1. Sprawdzanie maksymalnej ilości miejsca w salach należących do wystawy
+```sql
+SELECT SUM(sala.wielkosc) as wielkosc_wystawy, wystawa.nazwa FROM wystawa 
+LEFT JOIN wystawa_sala ON wystawa_sala.wystawaID = wystawa.wystawaID 
+LEFT JOIN sala ON sala.salaID = wystawa_sala.salaID 
+GROUP BY wystawa.wystawaID;
+```
+
+2. Sprawdzanie ilości dodanych eksponatów
+```sql
+SELECT COUNT(eksponat.eksponatID) as ilosc_eksponatow, wystawa.nazwa FROM eksponat 
+LEFT JOIN wystawa ON wystawa.wystawaID = eksponat.wystawaID GROUP BY wystawa.wystawaID;
+```
+
+3. Pokazanie dostępnych sal w czasie kiedy ma mieć miejsce dana wystawa
+```sql
+SELECT sala.numer, sala.wielkosc, sala.salaID FROM sala 
+WHERE sala.salaID NOT IN 
+( SELECT sala.salaID FROM budynek 
+INNER JOIN sala ON budynek.budynekID = sala.budynekID 
+LEFT JOIN wystawa_sala ON sala.salaID = wystawa_sala.salaID
+LEFT JOIN wystawa ON wystawa_sala.wystawaID = wystawa.wystawaID 
+WHERE (budynek.budynekID = {budynekID} AND 
+((DATE '{poczatek}' BETWEEN wystawa.poczatek AND wystawa.koniec) OR 
+(DATE '{koniec}' BETWEEN wystawa.poczatek AND wystawa.koniec))) OR 
+( budynek.budynekID != {budynekID}));
+```
+
 
 1. Wyszukanie danych pracownika podczas logowania
 

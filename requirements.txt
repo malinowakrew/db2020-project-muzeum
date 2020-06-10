@@ -1,3 +1,4 @@
+pandas
 sql
 pymysql==0.9.3
 python-dotenv==0.12.0

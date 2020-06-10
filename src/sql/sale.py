@@ -37,10 +37,6 @@ def dodaj_wystawe(wystawa, sala, budynek):
         connection = polaczenie()
         with connection.cursor() as cursor:
             sql = f"INSERT INTO wystawa_sala(salaID, wystawaID) VALUES ({sala}, {wystawa})"
-            """
-            sql = f"UPDATE sala SET sala.wystawaID = (SELECT wystawaID from wystawa where wystawa.nazwa='{wystawa}')" \
-                  f" WHERE sala.numer = {sala} AND sala.budynekID = {budynek} "
-            """
             cursor.execute(sql)
             connection.commit()
         connection.close()
