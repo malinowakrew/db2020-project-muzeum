@@ -7,11 +7,10 @@ import sql.autor as zapytania_autor
 
 ## do innych app
 import app.wystawy as wystawy_app
-import app.eksponaty as eksponaty_app
 
 ## dodatkowe
 import datetime
-from re import search
+
 
 
 class Uzytkownik(wystawy_app.niezalogowany):
@@ -313,7 +312,22 @@ class Pracownik(Uzytkownik):
                 for wystawa in ilosc_biletow:
                     print(f"Wystawa {wystawa['nazwa']} została odwiedzona przez {wystawa['ilosc']} użytkowników tej pięknej aplikacji")
             elif wybor == "2":
-                print("To masz problem")
+                ilosc_biletow = zapytania_wystawy.statystyki_dzienne(self.dzis)
+
+                print("W twoim oddziale muzeum: ")
+
+                for rekord in ilosc_biletow:
+                    if rekord['budynekID'] == self.budynekID:
+                        lista_biletów = ''
+                        for _ in range(0, rekord['ilosc']):
+                            lista_biletów += '#'
+                        print(f"{rekord['nazwa']} {lista_biletów} \t co daje sumę: {rekord['zarobki']}")
+
+                for rekord in ilosc_biletow:
+                        lista_biletów = ''
+                        for _ in range(0, rekord['ilosc']):
+                            lista_biletów += '#'
+                        print(f"{rekord['nazwa']} {lista_biletów}  ODDIAŁ: {rekord['budynek']}")
             else:
                 print("Niepoprawny wybór - skup się pracowniku.\n")
         except Exception as błąd:

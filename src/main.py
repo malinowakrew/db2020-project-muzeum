@@ -1,8 +1,5 @@
-import app.eksponaty as api
 import os
-import sql.wystawy as wystawy
 import app.wystawy as wystawy_app
-import app.eksponaty as eksponaty_app
 import app.logowania as logowania
 import datetime
 

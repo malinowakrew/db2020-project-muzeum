@@ -1,5 +1,4 @@
 import os
-import pymysql
 from . import polaczenie
 
 

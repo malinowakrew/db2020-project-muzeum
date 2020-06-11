@@ -90,7 +90,7 @@ def szukaj_autora(typ,nazwa):
         connection = polaczenie()
         with connection.cursor() as cursor:
             sql = (
-                f"SELECT autor.{typ}, wystawa.nazwa FROM autor "
+                f"SELECT DISTINCT autor.{typ}, wystawa.nazwa FROM autor "
                 f"JOIN eksponat_autor ON autor.autorID = eksponat_autor.autorID "
                 f"JOIN eksponat ON eksponat.eksponatID = eksponat_autor.eksponatID "                
                 f"JOIN wystawa ON eksponat.wystawaID = wystawa.wystawaID "

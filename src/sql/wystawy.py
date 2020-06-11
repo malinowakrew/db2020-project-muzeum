@@ -217,4 +217,25 @@ def eksponaty_z_wystawy(nazwa):
     except Exception as błąd:
         raise Exception(błąd)
 
+def statystyki_dzienne(dzien):
+    try:
+        connection = polaczenie()
+        with connection.cursor() as cursor:
+            sql = (
+                f"SELECT COUNT(bilet.biletID) as ilosc, SUM(bilet.cena) as zarobki, wystawa.nazwa, "
+                f"budynek.nazwa as budynek, budynek.budynekID "
+                f"FROM bilet LEFT "
+                f"JOIN wystawa ON wystawa.wystawaID = bilet.wystawaID "
+                f"LEFT JOIN pracownik ON pracownik.pracownikID = wystawa.pracownikID "
+                f"LEFT JOIN budynek ON budynek.budynekID = pracownik.budynekID "
+                f"WHERE bilet.data_zakupu = DATE '{dzien}' "
+                f"GROUP BY budynek.nazwa, wystawa.nazwa"
+            )
+            cursor.execute(sql)
+            result = cursor.fetchall()
+        connection.close()
+        return result
+    except Exception as błąd:
+        raise Exception(błąd)
+
 
