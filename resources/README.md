@@ -1,4 +1,4 @@
-﻿# Muzeum 
+# Muzeum 
 
 | Nazwisko i imię | Wydział | Kierunek | Semestr | Grupa | Rok akademicki |
 |:---------------:|:-------:|:--------:|:-------:|:-----:|:--------------:|
