@@ -323,11 +323,18 @@ class Pracownik(Uzytkownik):
                             lista_biletów += '#'
                         print(f"{rekord['nazwa']} {lista_biletów} \t co daje sumę: {rekord['zarobki']}")
 
+                oddzial = self.budynekID
                 for rekord in ilosc_biletow:
+                    if rekord['budynekID'] != self.budynekID:
+
+                        if rekord['budynekID'] != oddzial:
+                            print(f"\nODDZIAŁ: {rekord['budynek']}")
+                            oddzial = rekord['budynekID']
+
                         lista_biletów = ''
                         for _ in range(0, rekord['ilosc']):
                             lista_biletów += '#'
-                        print(f"{rekord['nazwa']} {lista_biletów}  ODDIAŁ: {rekord['budynek']}")
+                        print(f"{rekord['nazwa']} {lista_biletów} ")
             else:
                 print("Niepoprawny wybór - skup się pracowniku.\n")
         except Exception as błąd:

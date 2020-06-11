@@ -1,4 +1,4 @@
-# Muzeum 
+﻿# Muzeum 
 
 | Nazwisko i imię | Wydział | Kierunek | Semestr | Grupa | Rok akademicki |
 |:---------------:|:-------:|:--------:|:-------:|:-----:|:--------------:|
@@ -156,18 +156,31 @@ GROUP BY wystawa.nazwa
 ORDER BY ilosc;
 ```
 
-5. Wyszukanie danych pracownika podczas logowania
+5. Sprawdzanie ilości sprzedanych biletów na daną wystawę w dniu logowania pracownika. 
+Dodatkowo sprawdzany jest budynek-oddiał muzeum, gdzie znajduje się wystawa oraz suma zarobionych przez muzeum pieniędzy za sprzedane bilety.
 ```sql
-SELECT pracownik.imie, pracownik.nazwisko, pracownik.pracownikID, pracownik.budynekID 
-FROM pracownik 
-JOIN uzytkownik ON pracownik.nazwa = uzytkownik.nazwa 
-WHERE uzytkownik.nazwa = '{login}';
+SELECT COUNT(bilet.biletID) as ilosc, SUM(bilet.cena) as zarobki, wystawa.nazwa, 
+budynek.nazwa as budynek, budynek.budynekID 
+FROM bilet LEFT 
+JOIN wystawa ON wystawa.wystawaID = bilet.wystawaID 
+LEFT JOIN pracownik ON pracownik.pracownikID = wystawa.pracownikID 
+LEFT JOIN budynek ON budynek.budynekID = pracownik.budynekID 
+WHERE bilet.data_zakupu = DATE '{dzien}' 
+GROUP BY budynek.nazwa, wystawa.nazwa
 ```
+
 6. Sprawdzanie autorów, którzy mają najwięcej dzieł na wystawach w muzeum (także w przeszłości) oraz wyświetlenie ich liczby.
 ```sql
 SELECT autor.nazwisko, autor.imie, COUNT(eksponat_autor.eksponatID) 
 AS ilosc FROM autor JOIN eksponat_autor ON autor.autorID = eksponat_autor.autorID 
 GROUP BY autor.autorID ORDER BY autor.nazwisko LIMIT 5;
+```
+7. Wyszukanie danych pracownika podczas logowania
+```sql
+SELECT pracownik.imie, pracownik.nazwisko, pracownik.pracownikID, pracownik.budynekID 
+FROM pracownik 
+JOIN uzytkownik ON pracownik.nazwa = uzytkownik.nazwa 
+WHERE uzytkownik.nazwa = '{login}';
 ```
 
 ## Aplikacja
