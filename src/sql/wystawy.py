@@ -9,7 +9,10 @@ def wyszukiwarka_aktywnych_wystaw(dzis):
         connection = polaczenie()
         with connection.cursor() as cursor:
             # wykonujemy zapytanie do bazy i wyświetlamy
-            sql = f"SELECT nazwa, koniec FROM wystawa WHERE koniec > DATE '{dzis}' AND poczatek < DATE '{dzis}';"
+            sql = (
+                f"SELECT wystawa.nazwa, wystawa.koniec FROM wystawa "
+                f"WHERE wystawa.koniec > DATE '{dzis}' AND wystawa.poczatek < DATE '{dzis}';"
+            )
             cursor.execute(sql)
             result = cursor.fetchall()
 
@@ -57,8 +60,6 @@ def dodaj_wystawe(nazwa, poczatek, zakonczenie, pracownik, lista_sal, budynekID,
     try:
         with connection.cursor() as cursor:
             # dodajemy do tablicy Wystawa
-            #cursor.execute("SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED")
-            #connection.commit()
 
             sql = (
                 f"INSERT INTO wystawa (nazwa, poczatek, koniec, pracownikID) " 

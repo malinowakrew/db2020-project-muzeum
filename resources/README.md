@@ -68,7 +68,7 @@ WHERE uzytkownik.nazwa = '{login}' AND uzytkownik.haslo = '{haslo}';
 
 2. Pokazanie aktywnych wystaw (w dniu logowania)
 ```sql
-SELECT nazwa, koniec FROM wystawa WHERE koniec > DATE '{dzis}' AND poczatek < DATE '{dzis}';
+SELECT wystawa.nazwa, wystawa.koniec FROM wystawa WHERE wystawa.koniec > DATE '{dzis}' AND wystawa.poczatek < DATE '{dzis}';
 ```
 
 3. Pokazanie rankingu wystaw (popularność jest liczona ilością kupionych biletów na daną wystawę).
@@ -112,6 +112,13 @@ JOIN eksponat_autor ON eksponat_autor.eksponatID = eksponat.eksponatID
 JOIN autor ON autor.autorID = eksponat_autor.autorID 
 LEFT JOIN wystawa ON eksponat.wystawaID = wystawa.wystawaID 
 WHERE wystawa.nazwa = '{nazwa}';
+```
+
+7. Sprawdzenie zakupionych biletów danego użytkownika na wystawy, które jeszcze się nie zakończyły (tak aby zwrot biletu mógł być możliwy).
+```sql
+SELECT bilet.data_zakupu, wystawa.nazwa 
+FROM wystawa JOIN bilet ON wystawa.wystawaID = bilet.wystawaID 
+WHERE wystawa.koniec > DATE '{dzis}' AND nazwa_uzytkownika='{uzytkownik}';
 ```
 
 ### Pracownik
@@ -173,7 +180,7 @@ GROUP BY budynek.nazwa, wystawa.nazwa
 ```sql
 SELECT autor.nazwisko, autor.imie, COUNT(eksponat_autor.eksponatID) 
 AS ilosc FROM autor JOIN eksponat_autor ON autor.autorID = eksponat_autor.autorID 
-GROUP BY autor.autorID ORDER BY autor.nazwisko LIMIT 5;
+GROUP BY autor.autorID ORDER BY autor.nazwisko;
 ```
 7. Wyszukanie danych pracownika podczas logowania
 ```sql
@@ -184,5 +191,25 @@ WHERE uzytkownik.nazwa = '{login}';
 ```
 
 ## Aplikacja
+
+Z aplikacji mogą korzystać: osoby niezarejestrowane, użytkownicy z kontem, pracownicy z kontem pracowniczym i zwykłym.
+
+| Przykładowe dane logowania     |
+|:----------:|:--------:|:------:|
+| typ        | login    | hasło  |
+|:----------:|:--------:|:------:|
+| Pracownik  | Karolina | zxcv   |
+| Użytkownik | bloondi  | bloondi|
+
+# Niezalogowany
+
+1. Może przeglądać aktywne wystawy (tylko ich nazwy i data zamknięcia wystawy)
+2. Może wyświetlić TOP 5 popularnych wystaw. W zależności od wyboru może być to 5 najbardziej popularnych wystaw w ogóle albo tylko tych, które są aktywne.
+
+# Zalogowany użytkownik
+
+Wszystko to co użytkownik niezalogowany oraz dodatkowo:
+
+1. Przy przeglądaniu aktywnych wystaw może zobaczyć ekspnaty z wybranej przez siebie wystawy, wraz z ich opisem, autorem i datą powstania.
 
 ## Dodatkowe uwagi
