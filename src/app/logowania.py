@@ -285,7 +285,15 @@ class Pracownik(Uzytkownik):
 
                 autor = autor.split(" ")
 
-                res_autor = zapytania_autor.dodaj_autora_do_eksponatu(nazwa, poczatek, opis, autor[0], autor[1], autor[2])
+                if len(autor) == 3:
+                    res_autor = zapytania_autor.dodaj_autora_do_eksponatu(nazwa, poczatek, opis, autor[0], autor[1], autor[2])
+                else:
+                    ilosc_autorow = int(len(autor) / 3)
+                    iter = int(0)
+                    for _ in range(0, ilosc_autorow):
+                        res_autor = zapytania_autor.dodaj_autora_do_eksponatu(nazwa, poczatek, opis, autor[iter], autor[iter+1],
+                                                                              autor[iter+2])
+                        iter += 3
 
                 if  res_autor == 1:
                     print("Dodano autora")
