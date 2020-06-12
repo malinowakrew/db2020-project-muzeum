@@ -227,8 +227,16 @@ Wszystko to co użytkownik niezalogowany oraz dodatkowo:
 
 ### Zalogowany pracownik
 
-1. Dodawanie wystawy
-2. Dodawanie eksponatu 
+1. Dodawanie wystawy:
+a) Nadanie nazwy i ram czasowych
+b) Sprawdzenie wolnych sal w wybranych ramach czasowych. Wybór sal.
+c) Wybór typu dostępnych biletów
+
+2. Dodawanie eksponatu:
+a) Nadanie atrybutów (nazwy, opisu itd)
+b) Wybieranie autora dzieła. Jeśli taki autor już istnieje tworzone jest nowe połączenie wiele do wielu. Jeśli nie istnieje tworzony jest nowy autor.
+c) Wybór wystawy do jakiej będzie należeć dzieło. Sprawdzenie czy maksymalna ilość miejsca w salach, w których odbywa się wystawa, pozwala na dodanie nowego eksponatu.
+
 3. Statystyki zwiedzania - liczba wszystkich kupionych biletów na daną wystawę
 4. Statystyki dzienne - wykres wszystkich kupionych biletów w dniu logowania pracownika. Suma jaką zarobiło muzeum za sprzedane bilety. 
 5. Dodawanie autora
