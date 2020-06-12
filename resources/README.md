@@ -5,6 +5,16 @@
 | Tycjan Woronko  |  WIMiIP |    IS    |    4    |   4   |    2019/2020   |
 |  Edyta Mróz     |  WIMiIP |    IS    |    4    |   3   |    2019/2020   |
 
+### Spis treści
+
+[Projekt bazy danych](#projekt-bazy-danych)
+
+[Implementacja zapytań sql](#implementacja-zapytań-sql)
+
+[Aplikacja](#aplikacja)
+
+[Dodatkowe uwagi](#dodatkowe-uwagi)
+
 ## Projekt bazy danych
 
 ### Schemat ERD
