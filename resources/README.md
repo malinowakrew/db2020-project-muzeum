@@ -78,16 +78,17 @@ WHERE uzytkownik.nazwa = '{login}' AND uzytkownik.haslo = '{haslo}';
 
 2. Pokazanie aktywnych wystaw (w dniu logowania)
 ```sql
-SELECT wystawa.nazwa, wystawa.koniec FROM wystawa WHERE wystawa.koniec > DATE '{dzis}' AND wystawa.poczatek < DATE '{dzis}';
+SELECT wystawa.nazwa, wystawa.koniec FROM wystawa 
+WHERE wystawa.koniec > DATE '{dzis}' AND wystawa.poczatek < DATE '{dzis}';
 ```
 
 3. Pokazanie rankingu wystaw (popularność jest liczona ilością kupionych biletów na daną wystawę).
 
-a) wszystkie wystawy
+a) wszystkie wystawy, na które zakupiono więcej niż 7 biletów :)
 ```sql
 SELECT wystawa.nazwa, wystawa.koniec, wystawa.poczatek, COUNT(bilet.biletID) 
 AS ilosc FROM wystawa JOIN bilet ON wystawa.wystawaID = bilet.wystawaID 
-GROUP BY wystawa.wystawaID ORDER BY ilosc DESC LIMIT 5;
+GROUP BY wystawa.wystawaID HAVING ilosc > 7 ORDER BY ilosc DESC LIMIT 5;
 ```
 b) tylko aktywne wystawy
 ```sql
