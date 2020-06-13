@@ -5,6 +5,16 @@
 | Tycjan Woronko  |  WIMiIP |    IS    |    4    |   4   |    2019/2020   |
 |  Edyta Mróz     |  WIMiIP |    IS    |    4    |   3   |    2019/2020   |
 
+### Spis treści
+
+[Projekt bazy danych](#projekt-bazy-danych)
+
+[Implementacja zapytań sql](#implementacja-zapytań-sql)
+
+[Aplikacja](#aplikacja)
+
+[Dodatkowe uwagi](#dodatkowe-uwagi)
+
 ## Projekt bazy danych
 
 ### Schemat ERD
@@ -194,22 +204,49 @@ WHERE uzytkownik.nazwa = '{login}';
 
 Z aplikacji mogą korzystać: osoby niezarejestrowane, użytkownicy z kontem, pracownicy z kontem pracowniczym i zwykłym.
 
-| Przykładowe dane logowania     |
-|:----------:|:--------:|:------:|
+#### Przykładowe dane logowania     
+
 | typ        | login    | hasło  |
 |:----------:|:--------:|:------:|
 | Pracownik  | Karolina | zxcv   |
 | Użytkownik | bloondi  | bloondi|
 
-# Niezalogowany
+### Niezalogowany
 
 1. Może przeglądać aktywne wystawy (tylko ich nazwy i data zamknięcia wystawy)
 2. Może wyświetlić TOP 5 popularnych wystaw. W zależności od wyboru może być to 5 najbardziej popularnych wystaw w ogóle albo tylko tych, które są aktywne.
 
-# Zalogowany użytkownik
+### Zalogowany użytkownik
 
 Wszystko to co użytkownik niezalogowany oraz dodatkowo:
 
 1. Przy przeglądaniu aktywnych wystaw może zobaczyć ekspnaty z wybranej przez siebie wystawy, wraz z ich opisem, autorem i datą powstania.
+2. Możliwość zakupu biletu na daną wystawę.
+3. Możliwość zwrotu biletu jeśli wystawa jest jeszcze aktualna.
+4. Wyszukanie wystaw na których możemy prace wybranego przez nas autora.
+
+### Zalogowany pracownik
+
+1. Dodawanie wystawy:
+
+a) Nadanie nazwy i ram czasowych
+
+b) Sprawdzenie wolnych sal w wybranych ramach czasowych. Wybór sal.
+
+c) Wybór typu dostępnych biletów
+
+2. Dodawanie eksponatu:
+
+a) Nadanie atrybutów (nazwy, opisu itd)
+
+b) Wybieranie autora dzieła. Jeśli taki autor już istnieje tworzone jest nowe połączenie wiele do wielu. Jeśli nie istnieje tworzony jest nowy autor.
+
+c) Wybór wystawy do jakiej będzie należeć dzieło. Sprawdzenie czy maksymalna ilość miejsca w salach, w których odbywa się wystawa, pozwala na dodanie nowego eksponatu.
+
+3. Statystyki zwiedzania - liczba wszystkich kupionych biletów na daną wystawę
+4. Statystyki dzienne - wykres wszystkich kupionych biletów w dniu logowania pracownika. Suma jaką zarobiło muzeum za sprzedane bilety. 
+5. Dodawanie autora
+6. Zbadanie autorów - wyświetlenie wszystkich autorów oraz ilości dzieł jakie mają. 
 
 ## Dodatkowe uwagi
+Nie wszystkie zaplanowane funkcjonalności zostały przedstawione w aktualnej wersji aplikacji. Spowodowane jest to złożonością operacji w samej aplikacji jakie trzeba by było w tym celu zrealizować, a jednocześnie powtarzalnością i przeciętnością potrzebnym ku temu zapytań. Wybrano taki rodzaj funkcjonalności aby przestawić możliwie najciekawsze, złożone, a jednocześnie użyteczne zapytania sql.
