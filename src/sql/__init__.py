@@ -11,7 +11,7 @@ def polaczenie():
         user="admin",
         # password=os.getenv("DB_PASSWORD"),
         password="123",
-        database="muzeumdb",
+        database="muzeum",
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
     )
