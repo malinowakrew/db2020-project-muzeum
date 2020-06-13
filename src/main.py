@@ -42,7 +42,6 @@ def main():
             if (funkcjonalnosc == "1"):
                 dzis = datetime.datetime.now()
                 niezalogowany.wyszukiwarka_aktywnych_wystaw()
-                zmienna = 0
             elif (funkcjonalnosc == "2"):
                 niezalogowany.najczesciej_odwiedzane_wystawy()
             print("\n \t ################### \n")

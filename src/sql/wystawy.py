@@ -32,7 +32,8 @@ def najczesciej_odwiedzane_wystawy(wybor, dzis):
                 sql2 = (
                     "SELECT wystawa.nazwa, wystawa.koniec, wystawa.poczatek, COUNT(bilet.biletID) "
                     "AS ilosc FROM wystawa JOIN bilet ON wystawa.wystawaID = bilet.wystawaID "
-                    "GROUP BY wystawa.wystawaID ORDER BY ilosc DESC LIMIT 5;"
+                    "GROUP BY wystawa.wystawaID HAVING ilosc > 7 "
+                    "ORDER BY ilosc DESC LIMIT 5;"
                 )
 
             elif(wybor == "tak"):
