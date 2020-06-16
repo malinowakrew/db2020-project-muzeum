@@ -21,7 +21,7 @@
 
 ![baza](https://github.com/phajder-databases/db2020-project-muzeum/blob/readme/resources/muzeum_schemat_projektu.svg)
 
-### Zapytania DDL
+### Zapytania DML
 
 Dodawanie eksponatów
 ```sql
